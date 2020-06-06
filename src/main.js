@@ -8,9 +8,12 @@ import router from './router'
 import './style/reset.css'
 import './style/all.css'
 
+import axios from './api'
+
 Vue.use(ElementUI)
 
 Vue.config.productionTip = false
+Vue.prototype.$axios = axios
 
 /* eslint-disable no-new */
 new Vue({

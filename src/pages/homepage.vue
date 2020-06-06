@@ -17,7 +17,26 @@ export default {
 		}
 	},
 	mounted(){
-		
+		this.$axios({
+            method: 'get',
+            url: "../../sdfasdf",
+            params:{
+                user1
+            }
+        })
+        .then(res=>{
+
+        })
+        this.$axios({
+            method: 'post',
+            url: "../../sdfasdf",
+            data:{
+                user:1
+            }
+        })
+        .then(res=>{
+            
+        })
 	},
 	methods:{
 		
