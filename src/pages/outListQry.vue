@@ -32,7 +32,19 @@
 				</el-form-item>
 
                 <el-form-item label="产品">
-					<el-input  clearble></el-input>
+					<el-popover
+  					placement="right"
+  					width="550"
+  					trigger="click">
+  					<el-table :data="gridData">
+    				<el-table-column style="text-align: center;" width="80" property="id" label="序号"></el-table-column>
+    				<el-table-column width="80" property="num" label="产品编号"></el-table-column>
+    				<el-table-column width="200" property="name" label="产品名称"></el-table-column>
+					<el-table-column width="80" property="pr" label="产品品柜"></el-table-column>
+					<el-table-column width="80" property="scale" label="包装比例"></el-table-column>
+  					</el-table>
+  					<el-button slot="reference" style="display: inline-block;width:200px;text-align: left;color: #cecad1;" icon="el-icon-search">选择产品</el-button>
+				</el-popover>
 				</el-form-item>
 
                 <el-form-item label="出库库房">
@@ -105,6 +117,15 @@ export default {
 				label: '调拨出库'
 			}],
             checked: true,
+
+			gridData: [{
+          	id: '1',
+          	num: '01',
+          	name: '上海市普陀区金沙江路 1518 弄',
+			pr: '1',
+          	scale: '0x1'
+        	}],
+
 			tableData: []
 		}
 	}
@@ -134,4 +155,5 @@ export default {
 .el-checkbox{
     line-height: 19px;
 }
+
 </style>
