@@ -294,7 +294,7 @@ export default {
   }
   .el-menu{
     width:70px;  
-    height:600px;
+    height:calc(100vh - 120px);
     border-right: solid 0px;
     overflow-y: auto;
    
