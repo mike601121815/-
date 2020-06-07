@@ -13,7 +13,7 @@
 export default {
 	data(){
 		return {
-			
+			user: 1
 		}
 	},
 	mounted(){
@@ -21,7 +21,7 @@ export default {
             method: 'get',
             url: "../../sdfasdf",
             params:{
-                user1
+                user:1
             }
         })
         .then(res=>{

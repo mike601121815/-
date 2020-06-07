@@ -36,7 +36,7 @@
               <i  :class="item.iconPT"></i>
               <span onselectstart="return false">{{item.listName}}</span>
             </template>
-            <el-menu-item onselectstart="return false" style="padding-left: 60px" v-for="(child, index_) in item.children" @click="menuClick(child)" :key="index_" :index="index + '-' + index_">{{child.listName}}</el-menu-item>
+            <el-menu-item onselectstart="return false" style="padding-left: 60px" v-for="(child, index_) in item.children" @click="menuClick(child,item)" :key="index_" :index="index + '-' + index_">{{child.listName}}</el-menu-item>
             <!-- <el-menu-item-group>
               <template slot="title">分组一</template>
               <el-menu-item index="1-1">选项1</el-menu-item>
@@ -56,8 +56,7 @@
       <el-main >
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item ref="menu_1">活动管理</el-breadcrumb-item>
-          <el-breadcrumb-item ref="menu_2">活动列表</el-breadcrumb-item>
+          <el-breadcrumb-item v-for="(item, index) in breadcrumb" :key="index" ref="menu_1">{{item.listName}}</el-breadcrumb-item>
         </el-breadcrumb>
         <router-view/>
       </el-main>
@@ -70,7 +69,7 @@ export default {
   data(){
     return {
       isCollapse: true,
-
+      breadcrumb: [],
       menuList: [
         {
           listName: '用户管理',
@@ -234,10 +233,12 @@ export default {
             }
     },
   methods: {
-    menuClick(data){
+    menuClick(data,data2){
       this.$router.push({name: data.routeName})
-      this.$refs.menu_2.innerHTML=data.listName;
-      console.log(this.$refs.menu_2.innerHTML);
+      let breadcrumb = []
+      breadcrumb.push({listName: data2.listName,routeName: data2.listName},{listName: data.listName,routeName: data.listName})
+      this.breadcrumb = breadcrumb
+      
     },
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
