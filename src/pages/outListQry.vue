@@ -1,8 +1,8 @@
 <template>
 	<div class="content">
 		<div class="item">
-			<el-form ref="form" :inline="true" style="width:800px" :model="form" label-width="80px">
-				<el-form-item label="时间类型" style="width:800px">
+			<el-form ref="form" :inline="true" style="width:1000px" :model="form" label-width="80px">
+				<el-form-item label="时间类型">
 					<el-select v-model="form.value" placeholder="请选择" >
 						<el-option
 						v-for="item in options"
