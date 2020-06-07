@@ -3,7 +3,7 @@
 		<div class="item">
 			<el-form ref="form" :inline="true" :model="form" label-width="80px">
                
-                <div class="item" style="margin-top:0;">
+                <div class="item" style="margin:0 0 10px; padding:0px 0 0 0;">
                     <div style="width:800px; height:41px">
                         <label style="display: inline-block;text-align: right; width:80px;padding:0 12px 0 0;line-height: 41px;">单据时间</label>
                     </div>
@@ -23,11 +23,11 @@
 				</el-form-item>
                 </div>
 
-				<el-form-item label="单据号" style="margin:0 0 20px 20px">
-					<el-input v-model="form.billnum" clearble></el-input>
+				<el-form-item label="单据号" >
+					<el-input v-model="form.billnum" placeholder="请输入单据号" clearble></el-input>
 				</el-form-item>
 
-                <el-form-item label="单据类型" style="margin:0 0 10px 10px">
+                <el-form-item label="单据类型" >
 					<el-select v-model="options.value" placeholder="请选择" >
 						<el-option
 						v-for="item in options"
@@ -38,7 +38,7 @@
 					</el-select>
 				</el-form-item>
 
-                <el-form-item label="处理状态" style="width:800px;margin:0 0 20px 20px">
+                <el-form-item label="处理状态" >
 					<el-select v-model="stateForm.value" placeholder="请选择" >
 						<el-option
 						v-for="item in stateForm"
@@ -62,11 +62,11 @@ export default {
 	data(){
 		return {
 			form:{
-				startTime: '',
-				endTime: '',
-				billnum:'',
-				selectoption:0,
-				selectstateFrom:0,
+				startTime: '',//开始时间
+				endTime: '',  //结束时间
+				billnum:'',   //单据号
+				selectoption:0, //单据类型
+				selectstateFrom:0, //处理状态
 			},
 			options: [{
 				value: '选项1',
@@ -89,19 +89,18 @@ export default {
 		}
 	},
 	methods:{
-		select:function(){
-			console.log(this.form);
-			this.$http.post('/api/interface/blogs/add_comment',
-        		{
-          			content: this.form
-        		}
-      		)
-        	.then((response) => {
-          		alert('提交成功!, 刚才提交的内容是: ' + response.body.content)
-        	},
-        	(response) => {
-          		alert('出错了')
-        	})
+		selectbill(){
+			console.log(this.form)
+			this.$axios({
+				method: 'post',
+				url:'/getbill',
+				params:{
+					qry: this.form
+				}
+			})
+			.then(res=>{
+				console.log(res)
+			})
 		}
 	}
 }
@@ -115,7 +114,7 @@ export default {
 }
 .btn{
 	width: 500px;
-	margin:0px 100px;
+	margin:0px 80px;
 }
 .el-form--inline .el-form-item{
     width:300px;
