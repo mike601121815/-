@@ -232,11 +232,16 @@ export default {
                 }
             }
     },
+    mounted(){
+      let breadcrumb = JSON.parse(sessionStorage.getItem('breadcrumb'))
+      this.breadcrumb = breadcrumb
+    },
   methods: {
     menuClick(data,data2){
       this.$router.push({name: data.routeName})
       let breadcrumb = []
-      breadcrumb.push({listName: data2.listName,routeName: data2.listName},{listName: data.listName,routeName: data.listName})
+      breadcrumb.push({listName: data2.listName,routeName: data2.listName},{listName: data.listName,routeName: data.routeName})
+      sessionStorage.setItem('breadcrumb',JSON.stringify(breadcrumb))
       this.breadcrumb = breadcrumb
       
     },
