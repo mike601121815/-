@@ -197,7 +197,7 @@ export default {
 			console.log(this.form)
 			this.$axios({
 				method: 'post',
-				url:'/getQry',
+				url:'/FW/OutListQry.ashx',
 				params:{
 					qry: this.form
 				}

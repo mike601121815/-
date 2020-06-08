@@ -192,7 +192,7 @@ export default {
 			console.log(this.form)
 			this.$axios({
 				method: 'post',
-				url:'/getQryStatistics',
+				url:'/FW/OutStoreSeqCode.ashx',
 				params:{
 					dealer: this.form
 				}

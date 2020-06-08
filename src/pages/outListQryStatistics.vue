@@ -180,7 +180,7 @@ export default {
 			console.log(this.form)
 			this.$axios({
 				method: 'post',
-				url:'/getQryStatistics',
+				url:'/OutListQryStatistics.ashx',
 				params:{
 					qry: this.form
 				}
