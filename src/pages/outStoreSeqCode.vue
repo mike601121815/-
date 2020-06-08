@@ -1,7 +1,7 @@
 <template>
 	<div class="content">
 		<div class="item">
-			<el-form ref="form" :inline="true" :model="form" label-width="80px">
+			<el-form id="form" ref="form" :inline="true" :model="form" label-width="80px">
 				<el-form-item label="出库单号">
 					<el-input placeholder="请输入单号" v-model="form.odd" clearable></el-input>
 				</el-form-item>
@@ -57,16 +57,15 @@
 					</el-form-item>
 				</div>
 				<div v-if="form.radio === 3" style="margin:0 0 10px; padding:10px 0 0 0;"  class="item" >				
-					<el-form-item label="上传文件" >
+					<el-form-item label="上传文件" style="display:block;width:100%;">
 						<el-upload
 						class="upload-demo"
 						action="https://jsonplaceholder.typicode.com/posts/"
 						:on-preview="handlePreview"
 						:on-remove="handleRemove"
-						
 						list-type="picture">
 						<el-button size="small" type="primary">点击上传</el-button>
-						<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+							<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
 						</el-upload>
 					</el-form-item>
 				</div>
@@ -230,5 +229,14 @@ export default {
 }
 .el-radio{
     line-height: 16px;
+}
+</style>
+<style >
+#form .el-upload-list{
+	width: 900px!important;
+}
+#form  .el-upload-list--picture .el-upload-list__item{
+	width: 300px;
+	display: inline-block;
 }
 </style>
