@@ -74,7 +74,7 @@
 				</el-form-item>
 
                 <el-form-item style="width:800px;margin:0 80px;">
-					<el-checkbox v-model="form.checked">修改产品相关信息</el-checkbox>
+					<el-checkbox v-model="form.check">修改产品相关信息</el-checkbox>
 				</el-form-item>
 			</el-form>
 			<div class="btn">
@@ -121,7 +121,19 @@ export default {
 				num:'',   //顺序码
 
 				remark:'', //备注
-				checked: true, //修改选项
+				check: true, //修改选项
+				product: '',   //产品名称
+				productnum:'', //产品编号
+				productfactory:'', //生产工厂
+				production:'', //生产车间
+				productionline:'', //生产线
+				productionteam:'', //生产班组
+				productionbatch:'', //产品批号
+				supplier:'',        //供应商
+				qc:'',              //质检员
+				productiondate:'', //保质期
+				pd:'',//生产日期
+				expirationdate:'',//截止日期
 			},
 			options: [{
 				value: '选项1',
@@ -175,7 +187,7 @@ export default {
 			//	请求经销商数据
 			this.$axios({
 				method: 'post',
-				url:'/getdealerfocus',
+				url:'/FW/getdealerfocus',
 				params:{
 					
 				}

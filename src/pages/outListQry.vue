@@ -169,7 +169,7 @@ export default {
 		},
 		confirm(){
 			this.form.product = this.current.pr + this.current.name +this.current.scale;
-			this.form.num = this.current.num;
+			this.form.productnum = this.current.num;
 			this.dialogVisible = false
 		},
 		handleCurrentChange(data){
