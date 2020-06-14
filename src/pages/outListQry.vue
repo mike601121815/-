@@ -123,6 +123,7 @@ export default {
 				num:'',        //数码
 				checked1: false,  //单据类型选择
 				checked2: false,  //单据类型选择
+				
 			},
 			
 			options: [{

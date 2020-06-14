@@ -68,6 +68,11 @@
 export default {
   data(){
     return {
+      user:{
+        username: 'admin',
+        usercode:'123',
+        cid: '5697',
+      },
       isCollapse: true,
       breadcrumb: [],
       menuList: [
@@ -245,6 +250,7 @@ export default {
       this.breadcrumb = breadcrumb
       
     },
+
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
     },
@@ -254,7 +260,10 @@ export default {
     openClose(){
       this.isCollapse=!this.isCollapse;
     }
-  }
+  },
+  mounted: function () { 
+    console.log(this.user);
+    sessionStorage.setItem('user',JSON.stringify(this.user)); }
 }
 </script>
 
