@@ -41,20 +41,30 @@
                     </el-radio-group>
 				</el-form-item>
 				<div v-if="form.radio === 1" style="margin:0 0 10px; padding:10px 0 0 0;" class="item">
-					<el-form-item label="起始值" label-width="79px">
+					<el-form-item label="起始值">
 						<el-input placeholder="请输入数值" v-model="form.startvalue" clearble></el-input>
 					</el-form-item>
 					<el-form-item label="终止值" >
 						<el-input placeholder="请输入数值" v-model="form.endvalue" clearble></el-input>
 					</el-form-item>
-					<el-form-item label="剔除数码">
-						<el-input placeholder="请输入数值" v-model="form.deletevalue" clearble></el-input>
+					<el-form-item label="剔除数码" style="display:block;">
+						<el-input placeholder="请输入数值" @keyup.enter.native="deletevalueChange" v-model="deletevalue"  clearble></el-input>
 					</el-form-item>
+					<div class="tag">
+						<el-tag @close="romoveDeletevalue(index)" v-for="(tag, index) in form.deletevalue" :key="tag" closable>
+							{{tag}}
+						</el-tag>
+					</div>
 				</div>
 				<div v-if="form.radio === 2" style="margin:0 0 10px; padding:10px 0 0 0;"  class="item" >				
 					<el-form-item label="操作数码" >
-						<el-input  v-model="form.num" clearble></el-input>
+						<el-input  @keyup.enter.native="numChange" v-model="num" clearble></el-input>
 					</el-form-item>
+					<div class="tag">
+						<el-tag @close="numDeletevalue(index)" v-for="(tag, index) in form.deletevalue" :key="tag" closable>
+							{{tag}}
+						</el-tag>
+					</div>
 				</div>
 				<div v-if="form.radio === 3" style="margin:0 0 10px; padding:10px 0 0 0;"  class="item" >				
 					<el-form-item label="上传文件" style="display:block;width:100%;">
@@ -140,9 +150,6 @@
 			title="选择经销商"
 			:visible.sync="dialogVisible"
 			width="540px">
-			<div>
-				
-			</div>
 			<el-table :data="gridData" highlight-current-row
     		@row-click="handleCurrentChange">
 				<el-table-column align="center" width="80" property="id" label="序号"></el-table-column>
@@ -197,7 +204,9 @@ export default {
 	data(){
 		return {
 			dialogVisible:false,
-			dialogVisible2:true,
+			dialogVisible2:false,
+			deletevalue:null,
+			num: null,
 			form: {
 				odd:'',  //出库单号
 				outstore:'', //出库库房
@@ -207,9 +216,9 @@ export default {
 
 				startvalue:'',  //起始值
 				endvalue:'',    //终止值
-				deletevalue:'', //删除码
+				deletevalue: [], //删除码
 
-				num:'',   //顺序码
+				num: [],   //顺序码
 
 				remark:'', //备注
 				check: true, //修改选项
@@ -258,6 +267,22 @@ export default {
 		}
 	},
 	methods: {
+		numDeletevalue(index){
+			console.log(index)
+			this.form.num.splice(index,1)
+		},
+		numChange(val){
+			this.form.num.push(this.num)
+			this.num = null
+		},
+		romoveDeletevalue(index){
+			console.log(index)
+			this.form.deletevalue.splice(index,1)
+		},
+		deletevalueChange(val){
+			this.form.deletevalue.push(this.deletevalue)
+			this.deletevalue = null
+		},
       	handleRemove(file, fileList) {
         console.log(file, fileList);
       	},
@@ -332,6 +357,12 @@ export default {
 }
 .el-radio{
     line-height: 16px;
+}
+.tag{
+	margin: 20px 0;
+}
+.tag .el-tag{
+	margin-left: 20px;
 }
 </style>
 <style >
