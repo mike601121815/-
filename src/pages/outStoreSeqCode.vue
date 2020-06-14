@@ -319,7 +319,10 @@ export default {
 	  checkout(){
 			
 			var user = JSON.parse(sessionStorage.getItem('user'));
-			console.log(user)
+			let yy = new Date().getFullYear();
+            let mm = new Date().getMonth() + 1;
+			let dd = new Date().getDate();
+			var date=yy+'-'+mm+'-'+dd;
 			this.$axios({
 				method: 'post',
 				url:'/FW/OutStoreSeqCode.ashx',
@@ -329,7 +332,7 @@ export default {
 					//表单信息
 					dealer: this.form,
 					//提交时间
-					date:Date.data
+					date:date
 				}
 			})
 			.then(res=>{

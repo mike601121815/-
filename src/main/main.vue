@@ -4,7 +4,7 @@
     <img src="../assets/ppasslogo.gif"/>
     <div>
       <i class="el-icon-user"></i>
-      <span>admin</span>
+      <span>{{user.username}}</span>
       <i class="el-icon-house"></i>
       <span>首页</span>
       <i class="el-icon-question"></i>
@@ -262,7 +262,6 @@ export default {
     }
   },
   mounted: function () { 
-    console.log(this.user);
     sessionStorage.setItem('user',JSON.stringify(this.user)); }
 }
 </script>
