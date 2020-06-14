@@ -1,7 +1,7 @@
 <template>
 	<div class="content">
 		<div class="item">
-			<el-form id="form" ref="form" :inline="true" :model="form" label-width="80px">
+			<el-form id="form" ref="form" :inline="true" :model="form" label-width="90px">
 				<el-form-item label="出库单号">
 					<el-input placeholder="请输入单号" v-model="form.odd" clearable></el-input>
 				</el-form-item>
@@ -42,10 +42,10 @@
 				</el-form-item>
 				<div v-if="form.radio === 1" style="margin:0 0 10px; padding:10px 0 0 0;" class="item">
 					<el-form-item label="起始值" label-width="79px">
-					<el-input placeholder="请输入数值" v-model="form.startvalue" clearble></el-input>
+						<el-input placeholder="请输入数值" v-model="form.startvalue" clearble></el-input>
 					</el-form-item>
 					<el-form-item label="终止值" >
-					<el-input placeholder="请输入数值" v-model="form.endvalue" clearble></el-input>
+						<el-input placeholder="请输入数值" v-model="form.endvalue" clearble></el-input>
 					</el-form-item>
 					<el-form-item label="剔除数码">
 						<el-input placeholder="请输入数值" v-model="form.deletevalue" clearble></el-input>
@@ -53,7 +53,7 @@
 				</div>
 				<div v-if="form.radio === 2" style="margin:0 0 10px; padding:10px 0 0 0;"  class="item" >				
 					<el-form-item label="操作数码" >
-					<el-input  v-model="form.num" clearble></el-input>
+						<el-input  v-model="form.num" clearble></el-input>
 					</el-form-item>
 				</div>
 				<div v-if="form.radio === 3" style="margin:0 0 10px; padding:10px 0 0 0;"  class="item" >				
@@ -72,10 +72,65 @@
                <el-form-item label="备注"  style="width:100%">
 					<el-input style="width:830px"  clearble></el-input>
 				</el-form-item>
-
                 <el-form-item style="width:800px;margin:0 80px;">
 					<el-checkbox v-model="form.check">修改产品相关信息</el-checkbox>
 				</el-form-item>
+               	<div v-if="form.check">
+					<el-form-item label="产品" >
+						<el-input @focus="dialogVisible2 = true" clearble></el-input>
+					</el-form-item>
+					<el-form-item label="生产工厂" >
+						<el-select v-model="form.outstate" placeholder="请选择" >
+							<el-option
+							v-for="item in outstock"
+							:key="item.value"
+							:label="item.label"
+							:value="item.value">
+							</el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="生产车间">
+						<el-input clearble></el-input>
+					</el-form-item>
+					<el-form-item label="生产线" >
+						<el-select v-model="form.outstate" placeholder="请选择" >
+							<el-option
+							v-for="item in outstock"
+							:key="item.value"
+							:label="item.label"
+							:value="item.value">
+							</el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="生产班组" >
+						<el-select v-model="form.outstate" placeholder="请选择" >
+							<el-option
+							v-for="item in outstock"
+							:key="item.value"
+							:label="item.label"
+							:value="item.value">
+							</el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="产品批号" >
+						<el-input clearble></el-input>
+					</el-form-item>
+					<el-form-item label="供应商">
+						<el-input  clearble></el-input>
+					</el-form-item>
+					<el-form-item label="质检员" >
+						<el-input clearble></el-input>
+					</el-form-item>
+					<el-form-item label="保质期">
+						<el-input clearble></el-input>
+					</el-form-item>
+					<el-form-item label="生产日期">
+						<el-input  clearble></el-input>
+					</el-form-item>
+					<el-form-item label="截止有效期" >
+						<el-input clearble></el-input>
+					</el-form-item>
+				</div>
 			</el-form>
 			<div class="btn">
 				<el-button type="primary" @click="checkout">出库</el-button>
@@ -99,6 +154,41 @@
 				<el-button type="primary" @click="confirm">确 定</el-button>
 			</span>
 		</el-dialog>
+		<el-dialog
+			title="选择产品"
+			:visible.sync="dialogVisible2"
+			width="1040px">
+			<el-form :inline="true"  label-width="90px">
+				<el-form-item label="产品编号">
+					<el-input placeholder="请输入产品编号"  clearble></el-input>
+				</el-form-item>
+				<el-form-item label="产品名称">
+					<el-input placeholder="请输入产品编号"  clearble></el-input>
+				</el-form-item>
+				<el-form-item label="包装比例">
+					<el-select v-model="form.outstate" placeholder="请选择" >
+						<el-option
+						v-for="item in outstock"
+						:key="item.value"
+						:label="item.label"
+						:value="item.value">
+						</el-option>
+					</el-select>
+				</el-form-item>
+			</el-form>
+			<el-table :data="gridData" highlight-current-row
+    		@row-click="handleCurrentChange">
+				<el-table-column align="center" width="80" property="id" label="序号"></el-table-column>
+				<el-table-column align="center" width="120" property="num" label="产品编号"></el-table-column>
+				<el-table-column align="center" width="280" property="name" label="产品名称"></el-table-column>
+				<el-table-column align="center" width="280" property="name" label="产品品规"></el-table-column>
+				<el-table-column align="center" width="280" property="name" label="包装比例"></el-table-column>
+			</el-table>
+			<span slot="footer" class="dialog-footer">
+				<el-button @click="dialogVisible2 = false">取 消</el-button>
+				<el-button type="primary" @click="confirm">确 定</el-button>
+			</span>
+		</el-dialog>
 	</div>
 </template>
 
@@ -107,6 +197,7 @@ export default {
 	data(){
 		return {
 			dialogVisible:false,
+			dialogVisible2:true,
 			form: {
 				odd:'',  //出库单号
 				outstore:'', //出库库房
@@ -188,7 +279,7 @@ export default {
 			this.$axios({
 				method: 'post',
 				url:'/FW/getdealerfocus',
-				params:{
+				data:{
 					
 				}
 			})
