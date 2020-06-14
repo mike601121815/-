@@ -134,6 +134,7 @@ export default {
 				productiondate:'', //保质期
 				pd:'',//生产日期
 				expirationdate:'',//截止日期
+				
 			},
 			options: [{
 				value: '选项1',
@@ -200,19 +201,26 @@ export default {
 		},
 
 	  checkout(){
-			console.log(this.form)
+			
+			var user = JSON.parse(sessionStorage.getItem('user'));
+			console.log(user)
 			this.$axios({
 				method: 'post',
 				url:'/FW/OutStoreSeqCode.ashx',
 				params:{
-					dealer: this.form
+					//用户信息
+					user: user,
+					//表单信息
+					dealer: this.form,
+					//提交时间
+					date:Date.data
 				}
 			})
 			.then(res=>{
 				console.log(res)
 			})
 		}
-    }
+	}
 }
 </script>
 
