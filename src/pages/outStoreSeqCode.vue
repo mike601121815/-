@@ -29,7 +29,7 @@
 				</el-form-item>
 
                 <el-form-item label="经销商">
-					<el-input placeholder="请选择经销商" v-model="form.product" :value="form.dealer" @focus="dealerfocus"></el-input>
+					<el-input placeholder="请选择经销商" v-model="form.dealer" :value="form.dealernum" @focus="dealerfocus"></el-input>
 				</el-form-item>
 
 
@@ -61,7 +61,7 @@
 						<el-input  @keyup.enter.native="numChange" v-model="num" clearble></el-input>
 					</el-form-item>
 					<div class="tag">
-						<el-tag @close="numDeletevalue(index)" v-for="(tag, index) in form.deletevalue" :key="tag" closable>
+						<el-tag @close="numDeletevalue(index)" v-for="(tag, index) in form.num" :key="tag" closable>
 							{{tag}}
 						</el-tag>
 					</div>
@@ -80,14 +80,14 @@
 					</el-form-item>
 				</div>
                <el-form-item label="备注"  style="width:100%">
-					<el-input style="width:830px"  clearble></el-input>
+					<el-input style="width:830px" v-model="form.remark" clearble></el-input>
 				</el-form-item>
                 <el-form-item style="width:800px;margin:0 80px;">
 					<el-checkbox v-model="form.check">修改产品相关信息</el-checkbox>
 				</el-form-item>
                	<div v-if="form.check">
 					<el-form-item label="产品" >
-						<el-input @focus="dialogVisible2 = true" clearble></el-input>
+						<el-input @focus="dialogVisible2 = true" v-model="form.product" :value="form.productnum" clearble></el-input>
 					</el-form-item>
 					<el-form-item label="生产工厂" >
 						<el-select v-model="form.outstate" placeholder="请选择" >
@@ -135,10 +135,18 @@
 						<el-input clearble></el-input>
 					</el-form-item>
 					<el-form-item label="生产日期">
-						<el-input  clearble></el-input>
+						<el-date-picker
+						v-model="form.starttime" value-format="yyyy-MM-dd"
+						type="date"
+						placeholder="选择日期">
+					</el-date-picker>
 					</el-form-item>
 					<el-form-item label="截止有效期" >
-						<el-input clearble></el-input>
+						<el-date-picker
+						v-model="form.starttime" value-format="yyyy-MM-dd"
+						type="date"
+						placeholder="选择日期">
+					</el-date-picker>
 					</el-form-item>
 				</div>
 			</el-form>
@@ -167,7 +175,7 @@
 			width="1040px">
 			<el-form :inline="true"  label-width="90px">
 				<el-form-item label="产品编号">
-					<el-input placeholder="请输入产品编号"  clearble></el-input>
+					<el-input placeholder="请输入产品编号" v-model="form.product" clearble></el-input>
 				</el-form-item>
 				<el-form-item label="产品名称">
 					<el-input placeholder="请输入产品编号"  clearble></el-input>
@@ -193,7 +201,7 @@
 			</el-table>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="dialogVisible2 = false">取 消</el-button>
-				<el-button type="primary" @click="confirm">确 定</el-button>
+				<el-button type="primary" @click="confirm2">确 定</el-button>
 			</span>
 		</el-dialog>
 	</div>
@@ -211,6 +219,7 @@ export default {
 				odd:'',  //出库单号
 				outstore:'', //出库库房
 				outstate:'',   //出库类型
+				dealernum:'',    //经销商编码
 				dealer:'',    //经销商
 				radio: 1,    //操作方式
 
@@ -292,9 +301,14 @@ export default {
 	  	},
 
 		confirm(){
-			this.form.product =  this.current.name ;
-			this.form.num = this.current.num;
+			this.form.dealer =  this.current.name ;
+			this.form.dealernum = this.current.num;
 			this.dialogVisible = false
+		},
+		confirm2(){
+			this.form.product =  this.current.name ;
+			this.form.productnum = this.current.num;
+			this.dialogVisible2 = false
 		},
 		handleCurrentChange(data){
 			this.current = data
@@ -323,6 +337,7 @@ export default {
             let mm = new Date().getMonth() + 1;
 			let dd = new Date().getDate();
 			var date=yy+'-'+mm+'-'+dd;
+			console.log(this.form)
 			this.$axios({
 				method: 'post',
 				url:'/FW/OutStoreSeqCode.ashx',
@@ -354,7 +369,7 @@ export default {
 }
 .btn{
 	width: 500px;
-	margin:0px 80px;
+	margin:0px 90px;
 }
 .el-form--inline .el-form-item{
     width:300px;

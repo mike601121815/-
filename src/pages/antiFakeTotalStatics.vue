@@ -40,7 +40,7 @@
 				</el-form-item>
 			</el-form>
 			<div class="btn">
-				<el-button  @click=" " type="primary">查询</el-button>
+				<el-button type="primary">查询</el-button>
 			</div>
         </div>
 		
@@ -62,14 +62,8 @@ export default {
 				}, {
 				value: '选项2',
 				label: 'APP(移动终端查询)'
-			    }, {
-				value: '选项3',
-				label: 'TEL(电话查询)'
-			    }, {
-				value: '选项4',
-				label: 'SMS(短信查询)'
-			}],
-		}
+			    }],
+			}
 	},
 	mounted(){
 		
