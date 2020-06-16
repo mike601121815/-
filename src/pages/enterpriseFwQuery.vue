@@ -4,12 +4,16 @@
 		
 		<div>
 		<div class="search" ref="search">
-			<el-input
-    		placeholder="请输入防伪码"
+			<el-input placeholder="请输入防伪码"
     		v-model="input">
     			<i slot="prefix" class="el-input__icon el-icon-search"></i>
   			</el-input>
 			<el-button  type="primary" icon="el-icon-plus" circle @click="add1()"></el-button>
+			<div class="tag">
+				<el-tag @close="numDeletevalue(index)" v-for="(tag, index) in FWCode" :key="tag" closable>
+					{{tag}}
+				</el-tag>
+			</div>
 		</div>
 		</div>
 		<div class="search">
@@ -22,7 +26,8 @@
 export default {
 	data(){
 		return {
-			input:''
+			input:'',
+			FWCode :[]
 		}
 	},
 	mounted(){
@@ -30,8 +35,8 @@ export default {
 	},
 	methods:{
 		add1(){
-			this.$refs.search.innerHTML+="";
-			
+			this.FWCode.push(this.input)
+			this.input=null
 		},
 		delete1(){
 
@@ -53,5 +58,12 @@ span{
 }
 .el-button {
 	margin:5px 0;
+}
+.tag{
+	margin: 20px 0;
+}
+.tag .el-tag{
+	margin-left: 20px;
+	line-height:30px;
 }
 </style>
