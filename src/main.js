@@ -9,6 +9,7 @@ import './style/reset.css'
 import './style/all.css'
 
 import axios from './api'
+axios.defaults.baseURL = 'http://saas.panpass.com/'
 
 Vue.use(ElementUI)
 
