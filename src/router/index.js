@@ -35,11 +35,18 @@ import scurryMng from '../pages/scurryMng.vue'
 Vue.use(Router)
 
 export default new Router({
-  routes: [
-    {
-      redirect: 'homepage',
+  routes: [ {
       path: '/',
+      redirect: '/login'
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: main
+    },
+    {
       name: 'main',
+      path: 'main',
       component: main,
       children: [
         {

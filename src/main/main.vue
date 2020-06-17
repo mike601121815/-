@@ -55,7 +55,7 @@
       </el-aside>
       <el-main >
         <el-breadcrumb separator-class="el-icon-arrow-right">
-          <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ name: 'homepage' }">首页</el-breadcrumb-item>
           <el-breadcrumb-item v-for="(item, index) in breadcrumb" :key="index" ref="menu_1">{{item.listName}}</el-breadcrumb-item>
         </el-breadcrumb>
         <router-view/>
