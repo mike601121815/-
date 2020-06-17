@@ -49,7 +49,7 @@ export default new Router({
     },
     {
       name: 'main',
-      path: 'main',
+      path: '/main',
       component: main,
       children: [
         {
