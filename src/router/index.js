@@ -1,5 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
+import login from '../main/login.vue'
+
 import main from '../main/main.vue'
 import homepage from '../pages/homepage.vue'
 import settingUser from '../pages/settingUser.vue'
@@ -42,7 +45,7 @@ export default new Router({
     {
       path: '/login',
       name: 'login',
-      component: main
+      component: login
     },
     {
       name: 'main',
