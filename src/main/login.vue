@@ -6,7 +6,7 @@
       </div>
       <div>
         <el-tabs type="border-card" v-model="activeName" :stretch="false">
-          <el-tab-pane :name="1">
+          <el-tab-pane name="1">
             <span class="title" slot="label"><i class="el-icon-shopping-cart-2"></i> 经销商登录</span>
             <el-form ref="ruleForm1" :model="ruleForm1" :rules="rules1">
               <el-form-item prop="qyNum">
@@ -31,7 +31,7 @@
               </el-form-item>
             </el-form>
           </el-tab-pane>
-          <el-tab-pane :name="2">
+          <el-tab-pane name="2">
             <span class="title" slot="label"><i class="el-icon-office-building"></i> 企业登录</span>
             <el-form :model="ruleForm2" :rules="rules2">
               <el-form-item prop="qyNum">
@@ -52,7 +52,7 @@
             </el-form>
           </el-tab-pane>
         </el-tabs>
-        <el-button type="primary" @click="login" style="width:500px;margin-top:20px">登录</el-button>
+        <el-button type="primary" @click="submit" style="width:500px;margin-top:20px">登录</el-button>
       </div>
     </div>
   </el-container>
@@ -63,7 +63,7 @@ import {validateFigure} from '../utils/rules'
 export default {
   data(){
     return {
-      activeName: 1,
+      activeName: '1',
       user:{
         username: 'admin',
         usercode:'123',
@@ -114,8 +114,8 @@ export default {
    
   methods: {
     login(){
-      let data = this.activeName === 1 ? this.ruleForm1 : this.ruleForm2
-      thius.$axios({
+      let data = this.activeName === '1' ? this.ruleForm1 : this.ruleForm2
+      this.$axios({
         method: 'post',
         url:'/login/login',
         data: data
