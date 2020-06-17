@@ -83,10 +83,10 @@ export default {
           { required: true, validator: validateFigure, message: '请输入正确的经销商编号，经销商编号为纯数字', trigger: 'blur' },
         ],
         username:[
-          { required: true, validator: validateFigure, message: '请输入用户名', trigger: 'blur' },
+          { required: true, message: '请输入用户名', trigger: 'blur' },
         ],
         password:[
-          { required: true, validator: validateFigure, message: '请输入密码', trigger: 'blur' },
+          { required: true, message: '请输入密码', trigger: 'blur' },
         ],
       },
       ruleForm2:{
