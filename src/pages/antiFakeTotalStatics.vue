@@ -17,7 +17,7 @@
 					</el-date-picker>
 				</el-form-item>
 				<el-form-item label="查询方式">
-					<el-select v-model="form.value"  placeholder="请选择">
+					<el-select v-model="form.selectType"  placeholder="请选择">
 						<el-option
 						v-for="item in options"
 						:key="item.value"
@@ -42,6 +42,12 @@
 			<div class="btn">
 				<el-button type="primary">查询</el-button>
 			</div>
+			<div class="table">
+			<el-table border v-if="gridData.length" :data="gridData">
+				<el-table-column align="center" width="280" property="id" label="防伪码"></el-table-column>
+				<el-table-column align="center" property="num" label="产品"></el-table-column>
+			</el-table>
+		</div>	
         </div>
 		
 	</div>
@@ -51,18 +57,24 @@
 export default {
 	data(){
 		return {
-            form: {
-				username: '',
-				name: '',
-				value: null
+			form:{
+				strattime:'',  //起始日期
+				endtime:'',    //终止日期
+				selectType:'',  //查询方式
+				product:'',    //产品
+				province:'', //省份
+				area:'',     //地区
+				num:'',  //次数
 			},
 			options: [{
-				value: '选项1',
+				value: '1',
 				label: 'WEB(网络查询)'
 				}, {
-				value: '选项2',
+				value: '2',
 				label: 'APP(移动终端查询)'
-			    }],
+				}],
+			gridData: []
+
 			}
 	},
 	mounted(){
@@ -70,7 +82,29 @@ export default {
 	},
 	methods:{
 		aa(){
-
+			var user = JSON.parse(sessionStorage.getItem('user'));
+			console.log(this.form)
+      		this.$axios({
+        		method: 'post',
+        		url:'/FW/antiFakeTotalStatics.ashx',
+        		data :qs.stringify({
+					 cid:8005,
+					 form:this.form
+        		})
+      		})
+      		.then(res=>{
+				console.log(res)
+        		if(res!=null){
+          			this.gridData = res.map((item,index)=>{
+						  return {
+							  id: this.FWCode[index],
+							  num: item
+						  }
+					  })
+        		}else{
+					this.$message.error('查询出错');
+				}
+      		})		
 		}
 	}
 }

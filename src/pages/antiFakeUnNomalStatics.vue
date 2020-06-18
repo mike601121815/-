@@ -20,6 +20,20 @@
 			<div class="btn">
 				<el-button type="primary">查询</el-button>
 			</div>
+			<div class="table">
+			<el-table border v-if="gridData.length" :data="gridData">
+				<el-table-column align="center"  property="id" label="防伪码"></el-table-column>
+				<el-table-column align="center" property="num" label="批号"></el-table-column>
+				<el-table-column align="center" property="num" label="产品规格"></el-table-column>
+				<el-table-column align="center" property="num" label="包装比例"></el-table-column>
+				<el-table-column align="center" property="num" label="产品"></el-table-column>
+				<el-table-column align="center" property="num" label="查询时间"></el-table-column>
+				<el-table-column align="center" property="num" label="省份"></el-table-column>
+				<el-table-column align="center" property="num" label="地区"></el-table-column>
+				<el-table-column align="center" property="num" label="查询方式"></el-table-column>
+				<el-table-column align="center" property="num" label="号码/IP"></el-table-column>
+			</el-table>
+			</div>	
 		</div>
     </div>
 </template>
@@ -40,7 +54,7 @@ export default {
 				value: '选项2',
 				label: '双皮奶'
 			}],
-			tableData: []
+			gridData: []
 		}
 	}
 }

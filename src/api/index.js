@@ -3,7 +3,7 @@ const DEFAULT_OPTIONS = {
   // timeout: 10000,
   responseType: 'json',
   withCredentials: false, // 是否允许带cookie
-  headers: { 'Content-Type': 'application/json;charset=utf-8' }
+  headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
 }
 
 const Axios = axios.create(DEFAULT_OPTIONS)

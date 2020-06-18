@@ -17,17 +17,25 @@
 		</div>
 		</div>
 		<div class="search">
-		<el-button  type="primary" @click="selectFw">查询</el-button>	
-		</div>			
+			<el-button  type="primary" @click="selectFw">查询</el-button>	
+		</div>	
+		<div class="table">
+			<el-table border v-if="gridData.length" :data="gridData">
+				<el-table-column align="center" width="280" property="id" label="防伪码"></el-table-column>
+				<el-table-column align="center" property="num" label="产品"></el-table-column>
+			</el-table>
+		</div>		
 	</div>
 </template>
 
 <script>
+import qs from 'qs'
 export default {
 	data(){
 		return {
 			input:'',
-			FWCode :[]
+			FWCode :[],
+			gridData: []
 		}
 	},
 	mounted(){
@@ -44,21 +52,33 @@ export default {
 			this.FWCode.splice(index,1)	
 		},
 		selectFw(){
-			console.log(this.ruleForm1)
+			if(this.input!=""&&this.input!=null){
+				this.FWCode.push(this.input)
+				this.input=null
+			}
 			var user = JSON.parse(sessionStorage.getItem('user'));
+			console.log(user.QyNum);
       		this.$axios({
         		method: 'post',
         		url:'/FW/enterpriseFwQuery.ashx',
-        		params: {
-					cid:user.cid,
-          			fwcode:this.FWCode
-        		}
+        		data :qs.stringify({
+					  cid:user.QyNum,
+					  fwcode: this.FWCode,
+					  fwcodelenght:this.FWCode.length
+        		})
       		})
       		.then(res=>{
-        		console.log(res)
+				console.log(res)
         		if(res!=null){
-          			
-        		}      
+          			this.gridData = res.map((item,index)=>{
+						  return {
+							  id: this.FWCode[index],
+							  num: item
+						  }
+					  })
+        		}else{
+					this.$message.error('企业编号为空');
+				}
       		})		
 		}
 	}
