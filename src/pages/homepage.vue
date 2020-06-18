@@ -13,30 +13,11 @@
 export default {
 	data(){
 		return {
-			user: 1
+			
 		}
 	},
 	mounted(){
-		this.$axios({
-            method: 'get',
-            url: "../../sdfasdf",
-            params:{
-                user:1
-            }
-        })
-        .then(res=>{
-
-        })
-        this.$axios({
-            method: 'post',
-            url: "../../sdfasdf",
-            data:{
-                user:1
-            }
-        })
-        .then(res=>{
-            
-        })
+		
 	},
 	methods:{
 		

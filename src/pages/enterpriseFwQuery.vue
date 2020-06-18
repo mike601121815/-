@@ -10,14 +10,14 @@
   			</el-input>
 			<el-button  type="primary" icon="el-icon-plus" circle @click="add1()"></el-button>
 			<div class="tag">
-				<el-tag @close="numDeletevalue(index)" v-for="(tag, index) in FWCode" :key="tag" closable>
+				<el-tag @close="delete1(index)" v-for="(tag, index) in FWCode" :key="tag" closable>
 					{{tag}}
 				</el-tag>
 			</div>
 		</div>
 		</div>
 		<div class="search">
-		<el-button  type="primary">查询</el-button>	
+		<el-button  type="primary" @click="selectFw">查询</el-button>	
 		</div>			
 	</div>
 </template>
@@ -35,11 +35,31 @@ export default {
 	},
 	methods:{
 		add1(){
-			this.FWCode.push(this.input)
-			this.input=null
+			if(this.input!=""&&this.input!=null){
+				this.FWCode.push(this.input)
+				this.input=null
+			}
 		},
-		delete1(){
-
+		delete1(index){
+			this.FWCode.splice(index,1)	
+		},
+		selectFw(){
+			console.log(this.ruleForm1)
+			var user = JSON.parse(sessionStorage.getItem('user'));
+      		this.$axios({
+        		method: 'post',
+        		url:'/FW/enterpriseFwQuery.ashx',
+        		params: {
+					cid:user.cid,
+          			fwcode:this.FWCode
+        		}
+      		})
+      		.then(res=>{
+        		console.log(res)
+        		if(res!=null){
+          			
+        		}      
+      		})		
 		}
 	}
 }
@@ -60,10 +80,10 @@ span{
 	margin:5px 0;
 }
 .tag{
-	margin: 20px 0;
+	margin: 10px 0;
 }
 .tag .el-tag{
-	margin-left: 20px;
+	margin-right: 20px;
 	line-height:30px;
 }
 </style>

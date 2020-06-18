@@ -69,9 +69,9 @@ export default {
   data(){
     return {
       user:{
-        username: 'admin',
-        usercode:'123',
-        cid: '5697',
+        username: '',
+        usercode:'',
+        cid: '',
       },
       isCollapse: true,
       breadcrumb: [],
@@ -262,7 +262,9 @@ export default {
     }
   },
   mounted: function () { 
-    sessionStorage.setItem('user',JSON.stringify(this.user)); }
+    var user = JSON.parse(sessionStorage.getItem('user'));
+    this.user.name=user.username;   
+    }
 }
 </script>
 

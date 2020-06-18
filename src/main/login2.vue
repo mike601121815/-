@@ -1,12 +1,22 @@
 <template>
   <el-container style="height:100%; display:block">
     <div class="head">
-      <img src="../assets/STlogo.png" style="width:200px;float:left;margin-bottom:50px"/>
+      <img src="../assets/da9dfad0ef66a369e69b8d8bd482029.jpg" style="width:100px;float:left"/>
+      <div style="padding:20px">
+        <span>一码通产品数字身份管理系统</span>
+        <span>Enterprise Prodcut ID Management System</span>
+      </div>
     </div>
     <div style="background: rgb(43, 133, 228)">
       <el-row>
         <el-col class="left" :span="12" >
-          
+          <div>
+            <strong style="font-size:25px;color: white;">第一代云容器引擎  全新上线</strong>
+            <span>10倍功能提升，多场景产品家族，最优性价比</span>
+            <span>真正的一物一码SAAS云平台，打造一流生态圈</span>
+            <span>百余种行业应用产品和解决方案，即插即用，企业零负担，</span>
+            <span>按码量/效果/流量计费</span>
+          </div>
         </el-col>
         <el-col class="right" :span="12">
           <div style="background: white;width: 400px;height: 360px;margin-left: 30%;">
@@ -30,7 +40,7 @@
                 </el-input>
               </el-form-item>
             </el-form>
-            <el-button type="primary" @click="submit" style="width:350px;margin-top:20px;margin-left:25px;">登录</el-button>
+            <el-button type="primary" @click="login" style="width:350px;margin-top:20px;margin-left:25px;">登录</el-button>
           </div>
         </el-col>
       </el-row>
@@ -50,7 +60,6 @@ import {validateFigure} from '../utils/rules'
 export default {
   data(){
     return {
-      active:'2',
       ruleForm1:{
         qyNum: null, //企业编号
         username: '',//用户名
@@ -65,10 +74,10 @@ export default {
           
         ],
         username:[
-          { required: true,  message: '请输入用户名', trigger: 'blur' }
+          { required: true, validator: validateFigure, message: '请输入用户名', trigger: 'blur' }
         ],
         password:[
-          { required: true,  message: '请输入密码', trigger: 'blur' }
+          { required: true, validator: validateFigure, message: '请输入密码', trigger: 'blur' }
         ],
       }
     }
@@ -79,20 +88,19 @@ export default {
    
   methods: {
     login(){
+      console.log(222)
+      this.$router.push({name:'main'})
       this.$axios({
         method: 'post',
         url:'/FW/Login.ashx',
         params: {
-          active:this.active,
           user:this.ruleForm1
         }
       })
       .then(res=>{
         console.log(res)
-        if(res!=null){
-          var user=res;
-          sessionStorage.setItem('user',JSON.stringify(user));
-          this.$router.push({name:'homepage'})
+        if(res=="0"){
+          this.$router.push({name:'main'})
         }else if(res=="1"){
           
         }else if(res=="2"){
@@ -101,24 +109,29 @@ export default {
       })
     },
 
-    submit() {
+    submit(user) {
       let vm = this
       vm.$refs['ruleForm1'].validate((isValid,rules)=>{
       if(isValid){
+        console.log(111)
+        vm.$router.push({name:'main'})
         vm.login()
         }
       })
     }
-  }
-
+  },
+  mounted: function () { 
+    sessionStorage.setItem('user',JSON.stringify(this.user)); }
 }
 </script>
 
 <style scoped>
 .head{
+  font-size:20px;
   margin: 50px 0 50px 50px;
   width:100%;
-  height: 50px;
+  display: block;
+  Clear:both
 }
 .head span{
   width: 500px;
@@ -127,10 +140,9 @@ export default {
 }
 .el-row{
   float: left;
-  background:url(../assets/loginBG1.png)no-repeat;
+  background:url(../assets/loginBG2.png);
   width:100%;
-  height:369px;
-  background-size: 100% 100%;
+  height:369px
 }
 .left{
     position: absolute;
