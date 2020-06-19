@@ -24,7 +24,7 @@
               </el-form-item>
 
               <el-form-item prop="password">
-                <el-input placeholder="登录密码"  v-model="ruleForm1.password">
+                <el-input placeholder="登录密码" show-password  v-model="ruleForm1.password">
                   <i slot="prefix" class="el-input__icon el-icon-lock"></i>
                 </el-input>
               </el-form-item>
@@ -35,7 +35,7 @@
       </el-row>
     </div>
     <div class="bottom" style="text-align: center;" >
-      <span>@2017-2019</span>
+      <span>@2017-2020</span>
       <span>一码通 版权所有</span>
       <img src="../assets/police.png" style="margin:20px 10px 0 10px"/>
       <span>ICP证：</span>

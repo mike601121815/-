@@ -4,7 +4,7 @@
             欢迎使用
         </div>
 		<div class="title">
-            兆信产品数字身份管理系统
+            一码通产品数字身份管理系统
         </div>
 	</div>
 </template>

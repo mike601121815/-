@@ -1,7 +1,7 @@
 <template>
   <el-container style="height:100%;">
     <el-header>
-    <img src="../assets/ppasslogo.gif"/>
+    <img src="../assets/STlogo.png"/>
     <div>
       <i class="el-icon-user"></i>
       <span>{{user.username}}</span>
@@ -274,9 +274,8 @@ export default {
     background:url(../assets/top_bg.png)
   }
    .el-header img{
-    width:219px;
-    height:44px;
-    margin:6px 0 0 13px;
+    height:40px;
+    margin:10px 0 0 15px;
   }
   .el-header div{
     margin:0 13px 0 0;
@@ -323,7 +322,8 @@ export default {
     margin:20px 0 0 0;
   }
   .el-main{
-    background:url(../assets/index_bg.png)no-repeat right bottom;
+    background:url(../assets/mainBG.png)no-repeat left bottom;
+    background-size: 100%,auto;
     height:690px;
   }
 

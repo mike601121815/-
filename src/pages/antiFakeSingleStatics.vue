@@ -19,35 +19,35 @@
 				<div>
 					<strong>产品基本信息</strong>
 				</div>
-				<div>
+				<div class="product">
 					<el-row :gutter="20">
   					<el-col :span="6"><div>防伪码</div></el-col>
   					<el-col :span="6"><div>产品</div></el-col>
   					<el-col :span="6"><div>包装比例</div></el-col>
 					</el-row>
 					<el-row :gutter="20">
-  					<el-col :span="6"><div>{{productdata.FWcode}}</div></el-col>
-  					<el-col :span="6"><div>{{productdata.product}}</div></el-col>
-  					<el-col :span="6"><div>{{productdata.scale}}</div></el-col>
+  					<el-col class="productdata" :span="6"><div>{{productdata.FwCode}}</div></el-col>
+  					<el-col class="productdata" :span="6"><div>{{productdata.ProductName}}</div></el-col>
+  					<el-col class="productdata" :span="6"><div>{{productdata.TypeName}}</div></el-col>
 					</el-row>
 					<el-row :gutter="20">
   					<el-col :span="6"><div>批号</div></el-col>
   					<el-col :span="6"><div>产品规格</div></el-col>
 					</el-row>
 					<el-row :gutter="20">
-  					<el-col :span="6"><div>{{productdata.batch}}</div></el-col>
-  					<el-col :span="6"><div>{{productdata.qty}}</div></el-col>
+  					<el-col class="productdata" :span="6"><div>{{productdata.BathNo}}</div></el-col>
+  					<el-col class="productdata" :span="6"><div>{{productdata.Psid}}</div></el-col>
 					</el-row>
 				</div>
 			</div>
 			<el-table border :data="gridData">
-				<el-table-column align="center" property="id" label="时间"></el-table-column>
-				<el-table-column align="center" property="num" label="经销商编号"></el-table-column>
-				<el-table-column align="center" property="num" label="经销商"></el-table-column>
-				<el-table-column align="center" property="num" label="省份"></el-table-column>
-				<el-table-column align="center" property="num" label="地区"></el-table-column>
-				<el-table-column align="center" property="num" label="查询方式"></el-table-column>
-				<el-table-column align="center" property="num" label="号码/IP"></el-table-column>
+				<el-table-column align="center" property="QueryTime" label="时间"></el-table-column>
+				<el-table-column align="center" property="AgencyID" label="经销商编号"></el-table-column>
+				<el-table-column align="center" property="AgencyName" label="经销商"></el-table-column>
+				<el-table-column align="center" property="Province" label="省份"></el-table-column>
+				<el-table-column align="center" property="City" label="地区"></el-table-column>
+				<el-table-column align="center" property="QueryType" label="查询方式"></el-table-column>
+				<el-table-column align="center" property="IP" label="号码/IP"></el-table-column>
 			</el-table>
 			</div>	
 
@@ -57,17 +57,12 @@
 </template>
 
 <script>
+import qs from 'qs'
 export default {
 	data(){
 		return {
 			input:'',
-			productdata:{
-					FWcode:'',
-					product:'',
-					scale:'',
-					batch:'',
-					qty:'',
-			},
+			productdata:{},
 			gridData: []
 		}
 	},
@@ -79,21 +74,21 @@ export default {
 			var user = JSON.parse(sessionStorage.getItem('user'));
       		this.$axios({
         		method: 'post',
-        		url:'/FW/antiFakeSingleStatics.ashx',
+        		url:'/FW/SingelQueryHandler.ashx',
         		data :qs.stringify({
-					 cid:8005,
-					 form:this.input
+					 cid:user.QyNum,
+					 fwcode:this.input
         		})
       		})
       		.then(res=>{
 				console.log(res)
         		if(res!=null){
-          			this.gridData = res.map((item,index)=>{
-						  return {
-							  id: this.FWCode[index],
-							  num: item
-						  }
-					  })
+					if(Array.isArray(res)){
+						this.gridData = res;
+						this.productdata=res[0];
+					}else{
+						this.$message.error(res);
+					}
         		}else{
 					this.$message.error('查询出错');
 				}
@@ -115,5 +110,11 @@ export default {
 .btn{
 	width: 500px;
 	margin:10px 0;
+}
+.product .el-col{
+	margin: 10px 10px;
+}
+.product .productdata{
+	color: cornflowerblue;
 }
 </style>

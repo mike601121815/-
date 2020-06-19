@@ -65,7 +65,11 @@ export default {
 					  cid:user.QyNum,
 					  fwcode: this.FWCode,
 					  fwcodelenght:this.FWCode.length
-        		})
+				})
+				/*data:{
+					cid:user.QyNum,
+					  fwcode: this.FWCode,
+				}*/
       		})
       		.then(res=>{
 				console.log(res)
