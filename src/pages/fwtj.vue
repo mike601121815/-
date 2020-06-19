@@ -98,18 +98,18 @@ export default {
 			form: {
 				cid:'',
 				stratTime: '',
-				endTime: '',
-				quyType: '',
-				quyNums:''
+				endTime: new Date,
+				quyType: 1,
+				quyNums:0
 			},
             options: [{
-				value: '1',
+				value: 1,
 				label: '>='
 				}, {
-				value: '2',
+				value: 2,
 				label: '<='
 			    },{
-				value: '3',
+				value: 3,
 				label: '='
 			}],
 			gridData: [],
@@ -117,8 +117,8 @@ export default {
 			product:{},
 		}
 	},
-	mounted(){
-		
+	mounted : function(){
+		this.form.stratTime=this.getCurrentMonthFirst();
 	},
 	methods:{
 		aa(){
@@ -146,7 +146,12 @@ export default {
 			this.productInfo=row.Details;
 			this.product=this.productInfo[0];
 			console.log(this.product)
-		}
+		},
+		getCurrentMonthFirst(){
+            var date=new Date();
+            date.setDate(1);
+            return date;
+        }
 	}
 }
 </script>

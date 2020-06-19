@@ -69,8 +69,18 @@
 			</div>
 			<div class="table">
 			<el-table border v-if="gridData.length" :data="gridData">
-				<el-table-column align="center" width="280" property="id" label="防伪码"></el-table-column>
-				<el-table-column align="center" property="num" label="产品"></el-table-column>
+				<el-table-column align="center" property="FwCode" label="防伪码"></el-table-column>
+				<el-table-column align="center" property="BathNo" label="批号"></el-table-column>
+				<el-table-column align="center" property="Psid" label="产品品规"></el-table-column>
+				<el-table-column align="center" property="TypeName" label="包装比例"></el-table-column>
+				<el-table-column align="center" property="ProductName" label="产品"></el-table-column>
+				<el-table-column align="center" property="AgencyID" label="经销商编号"></el-table-column>
+				<el-table-column align="center" property="AgencyName" label="经销商"></el-table-column>
+				<el-table-column align="center" property="QueryTime" label="查询时间"></el-table-column>
+				<el-table-column align="center" property="Province" label="省份"></el-table-column>
+				<el-table-column align="center" property="City" label="地区"></el-table-column>
+				<el-table-column align="center" property="QueryType" label="查询方式"></el-table-column>
+				<el-table-column align="center" property="IP" label="号码/IP"></el-table-column>
 			</el-table>
 		</div>	
         </div>
@@ -118,22 +128,22 @@ export default {
 			form:{
 				cid:'',
 				starttime:'',  //起始日期
-				endtime:'',    //终止日期
-				quymode:'',  //查询方式
+				endtime:new Date,    //终止日期
+				quymode:0,  //查询方式
 				productName:'',    //产品
 				province:'', //省份
 				city:'',     //地区
-				quyType:'',  //次数
+				quyType:0,  //次数
 			},
 			options: [
 				{
-				value: '0',
+				value: 0,
 				label: '全部'
 				}, {
-				value: '1',
+				value: 1,
 				label: 'WEB(网络查询)'
 				}, {
-				value: '2',
+				value: 2,
 				label: 'APP(移动终端查询)'
 				}],
 			
@@ -162,7 +172,7 @@ export default {
 		}
 	},
 	mounted(){
-		
+		this.form.starttime=this.getCurrentMonthFirst();
 	},
 	methods:{
 
@@ -255,12 +265,7 @@ export default {
 				console.log(res)
         		if(res!=null){
 					if(Array.isArray(res)){
-          			this.gridData = res.map((item,index)=>{
-						  return {
-							  id: this.FWCode[index],
-							  num: item
-						  }
-					  })
+          			this.gridData = res;
 					}else{
 						this.$message.error(res);
 					}
@@ -268,7 +273,12 @@ export default {
 					this.$message.error('查询出错');
 				}
       		})		
-		}
+		},
+		getCurrentMonthFirst(){
+            var date=new Date();
+            date.setDate(1);
+            return date;
+        }
 	}
 }
 </script>
