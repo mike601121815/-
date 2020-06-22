@@ -1,18 +1,18 @@
 <template>
 	<div class="content">
 		<div class="item">
-            <el-form ref="form" :inline="true" style="width:800px" :model="form" label-width="80px">
+            <el-form ref="form" :inline="true"  :model="form" label-width="80px">
 				<el-form-item label="起始日期">
-					<el-date-picker
-                    v-model="form.starttime"
-						type="date"
+					<el-date-picker 
+                    v-model="form.starttime" 
+						type="date"  value-format="yyyy-MM-dd"
 						placeholder="选择日期">
 					</el-date-picker>
 				</el-form-item>
 				<el-form-item label="终止日期">
 					<el-date-picker
                     v-model="form.endtime"
-						type="date"
+						type="date" value-format="yyyy-MM-dd"
 						placeholder="选择日期">
 					</el-date-picker>
 				</el-form-item>
@@ -28,6 +28,7 @@
 				</el-form-item>
 				<el-form-item label="产品">
 					<el-input v-model="form.productName" placeholder="请选择产品" @focus="productfocus"></el-input>
+					<el-button class="del" icon="el-icon-delete" @click="delPdt" circle></el-button>
 				</el-form-item>
                 <el-form-item label="查询省份">
 
@@ -39,7 +40,7 @@
 						:value="item.PRO_NAME">
 						</el-option>
 					</el-select>	
-
+					<el-button class="del" icon="el-icon-delete" @click="delPro" circle></el-button>
 				</el-form-item>
 				<el-form-item label="查询地区">
 
@@ -51,7 +52,7 @@
 						:value="item.CITY_NAME">
 						</el-option>
 					</el-select>
-
+					<el-button class="del" icon="el-icon-delete" @click="delCity" circle></el-button>
 				</el-form-item>
                 <el-form-item label="查询次数">
 					<el-select v-model="form.quyType"  placeholder="请选择">
@@ -76,7 +77,7 @@
 				<el-table-column align="center" property="ProductName" label="产品"></el-table-column>
 				<el-table-column align="center" property="AgencyID" label="经销商编号"></el-table-column>
 				<el-table-column align="center" property="AgencyName" label="经销商"></el-table-column>
-				<el-table-column align="center" property="QueryTime" label="查询时间"></el-table-column>
+				<el-table-column align="center" property="QueryTime" :formatter="data_string" label="查询时间"></el-table-column>
 				<el-table-column align="center" property="Province" label="省份"></el-table-column>
 				<el-table-column align="center" property="City" label="地区"></el-table-column>
 				<el-table-column align="center" property="QueryType" label="查询方式"></el-table-column>
@@ -128,7 +129,7 @@ export default {
 			form:{
 				cid:'',
 				starttime:'',  //起始日期
-				endtime:new Date,    //终止日期
+				endtime: this.$moment().format("YYYY-MM-DD"),    //终止日期
 				quymode:0,  //查询方式
 				productName:'',    //产品
 				province:'', //省份
@@ -228,10 +229,11 @@ export default {
 			});
 			console.log(obj)
 			this.provincecode = obj.PRO_CODE;
+			this.cityData=null;
+			this.form.city='';
 		},
 
 		cityfocus(){
-			console.log(this.provincecode);
 			//	请求省份
 			this.$axios({
 				method: 'post',
@@ -249,12 +251,23 @@ export default {
 				}
 			})
 		},
-
+		delPdt(){
+			this.form.productName='';
+		},
+		delPro(){
+			this.form.province='';
+			this.cityData=null;
+			this.form.city='';
+		},
+		delCity(){
+			this.form.city='';
+		},
 		aa(){
 			var user = JSON.parse(sessionStorage.getItem('user'));
 			this.form.cid=user.QyNum;
-			console.log(this.form)
-      		this.$axios({
+			console.log(this.form);
+			if(this.form.starttime!=null&&this.form.endtime!=null){
+					this.$axios({
         		method: 'post',
         		url:'/FW/QueryFWHandle.ashx',
         		params:{
@@ -273,12 +286,27 @@ export default {
 					this.$message.error('查询出错');
 				}
       		})		
+			}else{
+				this.$message.error('请选择查询日期');
+			}
+      		
 		},
 		getCurrentMonthFirst(){
             var date=new Date();
             date.setDate(1);
-            return date;
-        }
+            return this.$moment(date).format("YYYY-MM-DD");
+		},
+		data_string(row) {
+			var str=row.QueryTime;
+        var d = eval('new ' + str.substr(1, str.length - 2));
+        var ar_date = [d.getFullYear(), d.getMonth() + 1, d.getDate() ];
+        var ar_time = [d.getHours(), d.getMinutes(), d.getSeconds()];
+        for (var i = 0; i < ar_date.length; i++) ar_date[i] = dFormat(ar_date[i]);
+        for (var i = 0; i < ar_time.length; i++) ar_time[i] = dFormat(ar_time[i]);
+        return ar_date.join('-')+" "+ar_time.join(':');
+
+        function dFormat(i) { return i < 10 ? "0" + i.toString() : i; }
+    	}
 	}
 }
 </script>
@@ -291,7 +319,7 @@ export default {
 	border: 1px solid #e3e3e3;
 }
 .el-form--inline .el-form-item{
-    width:300px;
+    width:400px;
 }
 .el-input,.el-select{
 	width:220px;
@@ -313,5 +341,8 @@ export default {
 .btn{
 	width: 500px;
 	margin:0 80px;
+}
+.del{
+	border: none;
 }
 </style>

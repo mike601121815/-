@@ -41,7 +41,7 @@
 				</div>
 			</div>
 			<el-table border :data="gridData">
-				<el-table-column align="center" property="QueryTime" label="时间"></el-table-column>
+				<el-table-column align="center" property="QueryTime" :formatter="data_string" label="时间"></el-table-column>
 				<el-table-column align="center" property="AgencyID" label="经销商编号"></el-table-column>
 				<el-table-column align="center" property="AgencyName" label="经销商"></el-table-column>
 				<el-table-column align="center" property="Province" label="省份"></el-table-column>
@@ -93,8 +93,18 @@ export default {
 					this.$message.error('查询出错');
 				}
       		})		
-		}
-		
+		},
+		data_string(row) {
+			var str=row.QueryTime;
+        var d = eval('new ' + str.substr(1, str.length - 2));
+        var ar_date = [d.getFullYear(), d.getMonth() + 1, d.getDate() ];
+        var ar_time = [d.getHours(), d.getMinutes(), d.getSeconds()];
+        for (var i = 0; i < ar_date.length; i++) ar_date[i] = dFormat(ar_date[i]);
+        for (var i = 0; i < ar_time.length; i++) ar_time[i] = dFormat(ar_time[i]);
+        return ar_date.join('-')+" "+ar_time.join(':');
+
+        function dFormat(i) { return i < 10 ? "0" + i.toString() : i; }
+    	}
 	}
 }
 </script>

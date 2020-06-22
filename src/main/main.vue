@@ -10,7 +10,7 @@
       <i class="el-icon-question"></i>
       <span>帮助</span>
       <i class="el-icon-circle-close"></i>
-      <span>退出</span>
+      <el-link href="" @click="exit" type="danger">退出</el-link>
     </div>
     </el-header>
     <el-container>
@@ -259,6 +259,9 @@ export default {
     },
     openClose(){
       this.isCollapse=!this.isCollapse;
+    },
+    exit(){
+      
     }
   },
   mounted: function () { 

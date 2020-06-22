@@ -1,17 +1,17 @@
 <template>
 	<div class="content">
 		<div class="item">
-			<el-form ref="form" :inline="true" style="width:800px" :model="form" label-width="80px">
+			<el-form ref="form" :inline="true" style="width:800px" :model="form" :rules="rules1" label-width="80px">
 				<el-form-item label="起始日期">
 					<el-date-picker
-						v-model="form.stratTime"
+						v-model="form.startTime" value-format="yyyy-MM-dd"
 						type="date"
 						placeholder="选择日期">
 					</el-date-picker>
 				</el-form-item>
 				<el-form-item label="终止日期">
 					<el-date-picker
-						v-model="form.endTime"
+						v-model="form.endTime" value-format="yyyy-MM-dd"
 						type="date"
 						placeholder="选择日期">
 					</el-date-picker>
@@ -78,7 +78,7 @@
 
 			<el-table :data="productInfo" highlight-current-row border
     			>
-				<el-table-column align="center"  property="QueryTime" label="查询时间"></el-table-column>
+				<el-table-column align="center"  property="QueryTime" :formatter="data_string" label="查询时间"></el-table-column>
 				<el-table-column align="center"  property="num" label="查询省份"></el-table-column>
 				<el-table-column align="center"  property="City" label="查询城市"></el-table-column>
 				<el-table-column align="center"  property="QueryType" label="查询方式"></el-table-column>
@@ -91,17 +91,26 @@
 
 <script>
 import qs from 'qs'
+import {validateFigure} from '../utils/rules'
 export default {
 	data(){
 		return {
 			dialogVisible: false,
 			form: {
 				cid:'',
-				stratTime: '',
-				endTime: new Date,
+				startTime: '',
+				endTime: this.$moment().format("YYYY-MM-DD"),
 				quyType: 1,
 				quyNums:0
 			},
+			rules1: {
+        		startTime:[
+          			{ required: true,  message: '请选择起始日期', trigger: 'blur' }
+        		],
+        		endTime:[
+          			{ required: true,  message: '请选择终止日期', trigger: 'blur' }
+        		],
+      		},
             options: [{
 				value: 1,
 				label: '>='
@@ -118,19 +127,22 @@ export default {
 		}
 	},
 	mounted : function(){
-		this.form.stratTime=this.getCurrentMonthFirst();
+		this.form.startTime=this.getCurrentMonthFirst();
 	},
 	methods:{
 		aa(){
 			var user = JSON.parse(sessionStorage.getItem('user'));
 			this.form.cid=user.QyNum;
-      		this.$axios({
+			console.log(this.form)
+			if(this.form.startTime!=null&&this.form.endTime!=null){
+					this.$axios({
         		method: 'post',
         		url:'/FW/QuerySummaryHandle.ashx',
         		params :{QuyForm:this.form}
       		})
       		.then(res=>{
         		if(res!=null){
+					console.log(res)
 					if(Array.isArray(res)){
           			this.gridData = res;
 					  }else{
@@ -140,6 +152,10 @@ export default {
 					this.$message.error('查询出错');
 				}
       		})		
+			}else{
+				this.$message.error('请选择查询日期');
+			}
+      		
 		},
 		handleClick(row){
 			this.dialogVisible=true,
@@ -150,8 +166,19 @@ export default {
 		getCurrentMonthFirst(){
             var date=new Date();
             date.setDate(1);
-            return date;
-        }
+            return this.$moment(date).format("YYYY-MM-DD");
+		},
+		data_string(row) {
+			var str=row.QueryTime;
+        var d = eval('new ' + str.substr(1, str.length - 2));
+        var ar_date = [d.getFullYear(), d.getMonth() + 1, d.getDate() ];
+        var ar_time = [d.getHours(), d.getMinutes(), d.getSeconds()];
+        for (var i = 0; i < ar_date.length; i++) ar_date[i] = dFormat(ar_date[i]);
+        for (var i = 0; i < ar_time.length; i++) ar_time[i] = dFormat(ar_time[i]);
+        return ar_date.join('-')+" "+ar_time.join(':');
+
+        function dFormat(i) { return i < 10 ? "0" + i.toString() : i; }
+    	}
 	}
 }
 </script>

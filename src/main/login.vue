@@ -34,12 +34,12 @@
         </el-col>
       </el-row>
     </div>
-    <div class="bottom" style="text-align: center;" >
+    <div class="bottom" style="text-align: center;">
       <span>@2017-2020</span>
       <span>一码通 版权所有</span>
       <img src="../assets/police.png" style="margin:20px 10px 0 10px"/>
       <span>ICP证：</span>
-      <el-link type="primary">沪ICP备05004162号-14</el-link>
+      <el-link href="http://beian.miit.gov.cn/" type="primary">粤ICP备20007414号</el-link>
     </div>
   </el-container>
 </template>
@@ -75,7 +75,9 @@ export default {
   watch:{
            
     },
-   
+   mounted: function () { 
+    console.log(JSON.parse(sessionStorage.getItem('user')));  
+    },
   methods: {
     login(){
       this.$axios({
