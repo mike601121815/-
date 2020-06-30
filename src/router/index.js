@@ -34,6 +34,8 @@ import scurryGoodsQry from '../pages/scurryGoodsQry.vue'
 import scurryGoodsTJ from '../pages/scurryGoodsTJ.vue'
 import frmscurryop from '../pages/frmscurryop.vue'
 import scurryMng from '../pages/scurryMng.vue'
+import parameter from '../pages/parameter.vue'
+
 
 Vue.use(Router)
 
@@ -173,6 +175,10 @@ export default new Router({
           path: 'scurryMng',
           name: 'scurryMng',
           component: scurryMng
+        },{
+          path: 'parameter',
+          name: 'parameter',
+          component: parameter
         },
       ]
     }
