@@ -264,7 +264,7 @@ export default {
       this.isCollapse=!this.isCollapse;
     },
     exit(){
-      
+      sessionStorage.clear()
     }
   },
   mounted: function () { 

@@ -17,6 +17,22 @@ Vue.use(ElementUI)
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios
 Vue.prototype.$moment = moment
+var i = 0
+router.beforeEach((to,from, next)=>{
+  let user = sessionStorage.getItem('user')
+  console.log(++i)
+  console.log(user)
+  // next()
+  if(user){
+    next()
+  }else{
+    if(to.path === '/login'){
+      next()
+    }else{
+      next('/login')
+    }
+  }
+})
 
 /* eslint-disable no-new */
 new Vue({
