@@ -4,7 +4,7 @@
       <div class="container">
         <div class="title">角色管理</div>
         <div class="tableContent">
-          <div class="list" v-for="(item ,index) in list" :key="item.RoleId" @click="userClick(index)">
+          <div class="list" v-for="(item ,index) in list" :key="item.RoleId" @click="userClick(index,item.RoleId)">
             <div class="anniu"></div>
             <div class="name" :class="{active: selectIndex === index}">{{item.RoleName}}</div>
           </div>
@@ -16,9 +16,9 @@
           <el-tree
             :data="data"
             show-checkbox
-            node-key="id"
-            :default-expanded-keys="[2, 3]"
-            :default-checked-keys="[5]"
+            node-key="Id"
+            :default-checked-keys="checkeds"
+            default-expand-all ref="tree"
             :props="defaultProps"
           ></el-tree>
         </div>
@@ -31,51 +31,14 @@
 export default {
   data() {
     return {
-      selectIndex: 0,
+      selectIndex: -1,
       list: [],
-      data: [
-        {
-          id: 1,
-          label: "一级 1",
-          children: [
-            {
-              id: 4,
-              label: "二级 1-1"
-            }
-          ]
-        },
-        {
-          id: 2,
-          label: "一级 2",
-          children: [
-            {
-              id: 5,
-              label: "二级 2-1"
-            },
-            {
-              id: 6,
-              label: "二级 2-2"
-            }
-          ]
-        },
-        {
-          id: 3,
-          label: "一级 3",
-          children: [
-            {
-              id: 7,
-              label: "二级 3-1"
-            },
-            {
-              id: 8,
-              label: "二级 3-2"
-            }
-          ]
-        }
-      ],
+      data: [],
+      expandeds:[],
+      checkeds:[],
       defaultProps: {
-        children: "children",
-        label: "label"
+        children: "Child",
+        label: "Lable"
       }
     };
   },
@@ -89,7 +52,8 @@ export default {
       .then(res=>{
         console.log(res);
         if(res.Code==0){
-          this.list=res.Data;
+          this.list=res.Data.RolesList;
+          this.data=res.Data.ModulesList;
         }else if(res=="1"){
           
         }else if(res=="2"){
@@ -98,19 +62,41 @@ export default {
       })
     },
   methods: {
-    userClick(index) {
+    userClick(index,roleId) {
       this.selectIndex = index;
+      
+      //请求权限功能
+      this.$axios({
+        method: 'post',
+        url:'/FW/Permission.ashx',
+        params: {RoleId:roleId}
+      })
+      .then(res=>{
+        console.log(res);
+        if(res.Code==0){
+          this.$refs.tree.setCheckedKeys(res.Data);
+        }else if(res=="1"){
+          
+        }else if(res=="2"){
+          
+        }       
+      })
+
+
     }
   }
 };
 </script>
 
 <style scoped>
+.content{
+  height: calc(100vh - 140px);
+}
 .rolePower {
+      margin: 20px 0;
   width: 100%;
   height: 100%;
   display: flex;
-  align-items: center;
   justify-content: space-between;
 }
 .container {
@@ -119,6 +105,7 @@ export default {
   border: 1px solid #ebeef5;
   display: flex;
   flex-direction: column;
+  overflow: auto;
 }
 .title {
   width: 100%;
