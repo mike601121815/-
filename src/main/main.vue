@@ -90,6 +90,9 @@ export default {
             },{
               listName: '密码修改',
               routeName: 'editPwd',
+            },{
+              listName: '权限管理',
+              routeName: 'parameter',
             }
           ]
         },

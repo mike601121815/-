@@ -2,11 +2,11 @@
   <div class="content">
     <div class="rolePower">
       <div class="container">
-        <div class="title">用户管理</div>
+        <div class="title">角色管理</div>
         <div class="tableContent">
-          <div class="list" v-for="(item ,index) in list" :key="item.id" @click="userClick(index)">
+          <div class="list" v-for="(item ,index) in list" :key="item.RoleId" @click="userClick(index)">
             <div class="anniu"></div>
-            <div class="name" :class="{active: selectIndex === index}">{{item.username}}</div>
+            <div class="name" :class="{active: selectIndex === index}">{{item.RoleName}}</div>
           </div>
         </div>
       </div>
@@ -32,16 +32,7 @@ export default {
   data() {
     return {
       selectIndex: 0,
-      list: [
-        {
-          username: "admin",
-          id: 1
-        },
-        {
-          username: "admin1",
-          id: 2
-        }
-      ],
+      list: [],
       data: [
         {
           id: 1,
@@ -88,6 +79,24 @@ export default {
       }
     };
   },
+  mounted(){
+      //初始化获取角色
+      this.$axios({
+        method: 'post',
+        url:'/FW/RoleAssign.ashx',
+        params: {}
+      })
+      .then(res=>{
+        console.log(res);
+        if(res.Code==0){
+          this.list=res.Data;
+        }else if(res=="1"){
+          
+        }else if(res=="2"){
+          
+        }       
+      })
+    },
   methods: {
     userClick(index) {
       this.selectIndex = index;
