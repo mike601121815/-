@@ -39,7 +39,18 @@ export default {
       defaultProps: {
         children: "Child",
         label: "Lable"
-      }
+      },
+      role:{
+        RoleName:"",//角色名
+        RoleType:"",
+        Remark:"",//备注
+        Creator:"",//创建人
+        Modifier:"",
+        ModifiedTime:"",
+        CorpId:"",
+        OrgPath:"",
+        OrgPathName:""
+      },
     };
   },
   mounted(){
@@ -47,7 +58,9 @@ export default {
       this.$axios({
         method: 'post',
         url:'/FW/RoleAssign.ashx',
-        params: {}
+        params: {
+          action:"getRoles"
+        }
       })
       .then(res=>{
         console.log(res);
@@ -64,12 +77,13 @@ export default {
   methods: {
     userClick(index,roleId) {
       this.selectIndex = index;
-      
       //请求权限功能
       this.$axios({
         method: 'post',
         url:'/FW/Permission.ashx',
-        params: {RoleId:roleId}
+        params: {
+          action:"getModules",
+          RoleId:roleId}
       })
       .then(res=>{
         console.log(res);
@@ -81,9 +95,12 @@ export default {
           
         }       
       })
+    },
 
+    addRole(){
 
     }
+
   }
 };
 </script>

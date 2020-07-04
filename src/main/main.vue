@@ -269,7 +269,7 @@ export default {
   },
   mounted: function () { 
     var user = JSON.parse(sessionStorage.getItem('user'));
-    this.user.name=user.username;   
+    this.user.username=user.Username;   
     }
 }
 </script>
