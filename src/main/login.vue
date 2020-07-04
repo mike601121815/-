@@ -80,7 +80,6 @@ export default {
     },
   methods: {
     login(){
-          this.$router.push({name:'homepage'})
       this.$axios({
         method: 'post',
         url:'/FW/Login.ashx',
