@@ -4,6 +4,11 @@
       <div class="container">
         <div class="title">角色管理</div>
         <div class="tableContent">
+          <div class="btnlist">
+            <el-button type="primary" @click="dialogVisible = true;title = '新增用户'">新增</el-button>
+            <el-button type="primary" @click="dialogVisible = true;title = '修改用户'">修改</el-button>
+            <el-button type="primary">删除</el-button>
+          </div>
           <div class="list" v-for="(item ,index) in list" :key="item.RoleId" @click="userClick(index,item.RoleId)">
             <div class="anniu"></div>
             <div class="name" :class="{active: selectIndex === index}">{{item.RoleName}}</div>
@@ -13,6 +18,11 @@
       <div class="container">
         <div class="title">权限管理</div>
         <div class="tableContent">
+          <div class="btnlist">
+            <el-button type="primary">新增</el-button>
+            <el-button type="primary">修改</el-button>
+            <el-button type="primary">删除</el-button>
+          </div>
           <el-tree
             :data="data"
             show-checkbox
@@ -24,6 +34,28 @@
         </div>
       </div>
     </div>
+    <el-dialog
+      :title="title"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose">
+      <el-form ref="ruleForm1" :model="ruleForm1" :rules="rules1" >
+        <el-form-item prop="username">
+          <el-input placeholder="用户名称"  v-model="ruleForm1.username">
+            <i slot="prefix" class="el-input__icon el-icon-star-on"></i>
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="password">
+          <el-input placeholder="登录密码" show-password  v-model="ruleForm1.password">
+            <i slot="prefix" class="el-input__icon el-icon-lock"></i>
+          </el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -31,6 +63,19 @@
 export default {
   data() {
     return {
+      ruleForm1:{
+        username: '',
+        password: ''
+      },
+      rules1:{
+        username:[
+          { required: true,  message: '请输入用户名', trigger: 'blur' }
+        ],
+        password:[
+          { required: true,  message: '请输入密码', trigger: 'blur' }
+        ],
+      },
+      dialogVisible: false,
       selectIndex: -1,
       list: [],
       data: [],
@@ -75,6 +120,13 @@ export default {
       })
     },
   methods: {
+    handleClose(done) {
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          done();
+        })
+        .catch(_ => {});
+    },
     userClick(index,roleId) {
       this.selectIndex = index;
       //请求权限功能
