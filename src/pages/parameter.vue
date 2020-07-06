@@ -3,12 +3,12 @@
     <div class="rolePower">
       <div class="container">
         <div class="title">角色管理</div>
-        <div class="tableContent">
-          <div class="btnlist">
-            <el-button type="primary" @click="dialogVisible = true;title = '新增用户'">新增</el-button>
-            <el-button type="primary" @click="dialogVisible = true;title = '修改用户'">修改</el-button>
-            <el-button type="primary">删除</el-button>
+        <div class="btnlist">
+            <el-button type="primary" @click="add">新增</el-button>
+            <el-button type="primary" @click="edit">修改</el-button>
+            <el-button type="primary" @click="delRole">删除</el-button>
           </div>
+        <div class="tableContent">
           <div class="list" v-for="(item ,index) in list" :key="item.RoleId" @click="userClick(index,item.RoleId)">
             <div class="anniu"></div>
             <div class="name" :class="{active: selectIndex === index}">{{item.RoleName}}</div>
@@ -17,12 +17,10 @@
       </div>
       <div class="container">
         <div class="title">权限管理</div>
-        <div class="tableContent">
-          <div class="btnlist">
-            <el-button type="primary">新增</el-button>
-            <el-button type="primary">修改</el-button>
-            <el-button type="primary">删除</el-button>
+        <div class="btnlist">
+            <el-button type="primary" @click="esec">设置确认</el-button>
           </div>
+        <div class="tableContent">
           <el-tree
             :data="data"
             show-checkbox
@@ -38,22 +36,37 @@
       :title="title"
       :visible.sync="dialogVisible"
       width="30%"
-      :before-close="handleClose">
-      <el-form ref="ruleForm1" :model="ruleForm1" :rules="rules1" >
-        <el-form-item prop="username">
-          <el-input placeholder="用户名称"  v-model="ruleForm1.username">
-            <i slot="prefix" class="el-input__icon el-icon-star-on"></i>
+      >
+      <el-form ref="ruleForm1" :model="role" :rules="rules1" >
+        <el-form-item prop="RoleName">
+          <el-input placeholder="角色名称" prefix-icon="el-icon-s-custom"  v-model="role.RoleName">
+            <template slot="prepend">角色名称</template>
           </el-input>
         </el-form-item>
-        <el-form-item prop="password">
-          <el-input placeholder="登录密码" show-password  v-model="ruleForm1.password">
-            <i slot="prefix" class="el-input__icon el-icon-lock"></i>
+        <el-form-item >
+          <el-input :disabled="true" prefix-icon="el-icon-edit-outline" v-model="role.Creator">
+            <template slot="prepend">创建用户</template>
+          </el-input>
+        </el-form-item>
+        <el-form-item >
+          <el-input :disabled="true" prefix-icon="el-icon-office-building" v-model="role.CorpId">
+            <template slot="prepend">企业编号</template>
+          </el-input>
+        </el-form-item>
+        <el-form-item >
+          <span style="margin: 0 20px;">状态</span>
+          <el-radio v-model="role.RoleType" label="1">启用</el-radio>
+          <el-radio v-model="role.RoleType" label="0">停用</el-radio>
+        </el-form-item>
+        <el-form-item >
+          <el-input type="textarea" placeholder="角色备注" v-model="role.Remark"> 
+            <template slot="prepend">角色名称</template>
           </el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="setRole">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -63,17 +76,11 @@
 export default {
   data() {
     return {
-      ruleForm1:{
-        username: '',
-        password: ''
-      },
+      user:{},
       rules1:{
-        username:[
-          { required: true,  message: '请输入用户名', trigger: 'blur' }
-        ],
-        password:[
-          { required: true,  message: '请输入密码', trigger: 'blur' }
-        ],
+        RoleName:[
+          { required: true,  message: '请输入角色名称', trigger: 'blur' }
+        ]
       },
       dialogVisible: false,
       selectIndex: -1,
@@ -85,49 +92,95 @@ export default {
         children: "Child",
         label: "Lable"
       },
+      title:"",
+      dialogtype:0,
       role:{
+        RoleId:0,
         RoleName:"",//角色名
         RoleType:"",
         Remark:"",//备注
         Creator:"",//创建人
         Modifier:"",
-        ModifiedTime:"",
-        CorpId:"",
+        //ModifiedTime:"",
+        CorpId:"",//企业ID
         OrgPath:"",
-        OrgPathName:""
+        OrgPathName:"",
+        selectData: null
       },
     };
   },
   mounted(){
-      //初始化获取角色
-      this.$axios({
-        method: 'post',
-        url:'/FW/RoleAssign.ashx',
-        params: {
-          action:"getRoles"
-        }
-      })
-      .then(res=>{
-        console.log(res);
-        if(res.Code==0){
-          this.list=res.Data.RolesList;
-          this.data=res.Data.ModulesList;
-        }else if(res=="1"){
-          
-        }else if(res=="2"){
-          
-        }       
-      })
+    var user = JSON.parse(sessionStorage.getItem('user'));
+    this.user=user;
+    this.getRoles();
+    this.getModules();
     },
   methods: {
-    handleClose(done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          done();
+    esec(){
+      //判断是否选中角色
+      if(this.selectIndex!=-1){
+        let data = this.$refs['tree'].getCheckedNodes()
+        data = data.filter(item=>{
+          if(!item.Child){
+            return item.Id
+          }
         })
-        .catch(_ => {});
+        data = data.map(item=>{
+          if(!item.Child){
+            return item.Id
+          }
+        })
+        //发送权限列表
+        this.$axios({
+        method: 'post',
+        url:'/FW/ProcessRequest.ashx',
+        params: {
+          action:"setRoles_Moudles",
+          RoleId:this.selectData.RoleId,
+          Moudles:data
+        }
+        }).then(res=>{
+          if(res.Code==0){
+            this.list=res.Data;
+          }else if(res=="1"){
+          
+          }else if(res=="2"){
+          
+          }       
+      })
+
+
+      }else{
+        this.$message({
+            showClose: true,
+            message:"请先选择角色",
+            type: 'warning'
+            });
+      }
+    },
+
+    add(){
+      this.dialogVisible = true;
+      this.dialogtype=1;
+      this.title = '新增角色';
+      this.role.Creator = this.user.Username;
+      this.role.CorpId = this.user.QyNum
+      this.$nextTick(()=>{
+        this.$refs['ruleForm1'].resetFields();
+      })
+    },
+    edit(){
+      this.dialogVisible = true;
+      this.dialogtype = 2;
+      this.title = '修改角色';
+      this.role.Creator = this.selectData.Creator;
+      this.role.RoleId = this.selectData.RoleId
+      this.role.CorpId = this.selectData.CorpId
+      this.role.RoleName = this.selectData.RoleName
+      this.role.RoleType = String(this.selectData.RoleType)
     },
     userClick(index,roleId) {
+      this.selectData = this.list[index]
       this.selectIndex = index;
       //请求权限功能
       this.$axios({
@@ -141,6 +194,25 @@ export default {
         console.log(res);
         if(res.Code==0){
           this.$refs.tree.setCheckedKeys(res.Data);
+        }else if(res==1){
+          
+        }else if(res==2){
+          
+        }       
+      })
+    },
+    getRoles(){
+      //初始化获取角色
+      this.$axios({
+        method: 'post',
+        url:'/FW/RoleAssign.ashx',
+        params: {
+          action:"getRoles"
+        }
+      })
+      .then(res=>{
+        if(res.Code==0){
+          this.list=res.Data;
         }else if(res=="1"){
           
         }else if(res=="2"){
@@ -149,10 +221,136 @@ export default {
       })
     },
 
+    setRole(){
+      if (this.dialogtype==1){
+        this.addRole();
+      }else if(this.dialogtype==2){
+        this.updataRole();
+      }
+    },
+
     addRole(){
+      this.dialogVisible = false;
+      //添加角色
+      this.$axios({
+        method: 'post',
+        url:'/FW/RoleAssign.ashx',
+        params: {
+          action:"addRole",
+          role:this.role}
+      })
+      .then(res=>{
+        if(res.Code==0){
+          this.$message({
+            showClose: true,
+            message:res.Msg,
+            type: 'success'
+            });
+            this.getRoles();
+        }else if(res==1){
+            this.$message({
+            showClose: true,
+            message:res.Msg,
+            type: 'warning'
+            });
+        }else if(res==2){
+          this.$message({
+            showClose: true,
+            message:res.Msg,
+            type: 'warning'
+            });
+        }       
+      })
+    },
 
-    }
+    updataRole(){
+      this.dialogVisible = false;
+      //修改角色
+      this.$axios({
+        method: 'post',
+        url:'/FW/RoleAssign.ashx',
+        params: {
+          action:"updataRole",
+          role:this.role}
+      })
+      .then(res=>{
+        if(res.Code==0){
+          this.$message({
+            showClose: true,
+            message:res.Msg,
+            type: 'success'
+            });
+            this.getRoles();
+        }else if(res==1){
+            this.$message({
+            showClose: true,
+            message:res.Msg,
+            type: 'warning'
+            });
+        }else if(res==2){
+          this.$message({
+            showClose: true,
+            message:res.Msg,
+            type: 'warning'
+            });
+        }       
+      })
+    },
 
+    delRole(){
+      //删除角色
+      this.$axios({
+        method: 'post',
+        url:'/FW/RoleAssign.ashx',
+        params: {
+          action:"delRole",
+          roleId:this.selectData.RoleId}
+      })
+      .then(res=>{
+        console.log(res);
+        if(res.Code==0){
+          this.$message({
+            showClose: true,
+            message:res.Msg,
+            type: 'success'
+            });
+            this.getRoles();
+        }else if(res==1){
+            this.$message({
+            showClose: true,
+            message:res.Msg,
+            type: 'warning'
+            });
+        }else if(res==2){
+          this.$message({
+            showClose: true,
+            message:res.Msg,
+            type: 'warning'
+            });
+        }       
+      })
+    },
+
+    getModules(){
+      //初始化获取角色
+      this.$axios({
+        method: 'post',
+        url:'/FW/RoleAssign.ashx',
+        params: {
+          action:"getModules"
+        }
+      })
+      .then(res=>{
+        console.log(res);
+        if(res.Code==0){
+          this.data=res.Data;
+        }else if(res=="1"){
+          
+        }else if(res=="2"){
+          
+        }       
+      })
+    },
   }
 };
 </script>
@@ -216,5 +414,23 @@ export default {
   background: gray;
   color: #fff;
   text-indent: 20px;
+}
+.btnlist{
+  border:1px solid #ebeef5;
+  padding: 10px;
+}
+</style>
+
+<style>
+.el-dialog__body{
+  padding: 0px 20px;
+}
+.el-input__icon{
+  width: auto;
+  line-height: 42px;
+}
+
+.el-form-item__content {
+    line-height: 0px; 
 }
 </style>
