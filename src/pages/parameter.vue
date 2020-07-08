@@ -248,6 +248,7 @@ export default {
             type: 'success'
             });
             this.getRoles();
+            this.selectIndex =0;
         }else if(res==1){
             this.$message({
             showClose: true,
@@ -282,6 +283,7 @@ export default {
             type: 'success'
             });
             this.getRoles();
+            this.selectIndex =0;
         }else if(res==1){
             this.$message({
             showClose: true,
@@ -330,6 +332,7 @@ export default {
             });
         }       
       })
+      this.selectIndex =0;
     },
 
     getModules(){
