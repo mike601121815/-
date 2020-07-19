@@ -143,10 +143,12 @@ export default {
         }).then(res=>{
           if(res.Code==0){
             
-          }else if(res=="1"){
-          
-          }else if(res=="2"){
-          
+          }else{
+            this.$message({
+            showClose: true,
+            message:res.Msg,
+            type: 'warning'
+            });
           }       
       })
 
@@ -195,10 +197,12 @@ export default {
         console.log(res);
         if(res.Code==0){
           this.$refs.tree.setCheckedKeys(res.Data);
-        }else if(res==1){
-          
-        }else if(res==2){
-          
+        }else{
+          this.$message({
+            showClose: true,
+            message:res.Msg,
+            type: 'warning'
+            });
         }       
       })
     },
@@ -214,11 +218,13 @@ export default {
       .then(res=>{
         if(res.Code==0){
           this.list=res.Data;
-        }else if(res=="1"){
-          
-        }else if(res=="2"){
-          
-        }       
+        }else{
+          this.$message({
+            showClose: true,
+            message:res.Msg,
+            type: 'warning'
+            });
+        }      
       })
     },
 
@@ -249,19 +255,13 @@ export default {
             });
             this.getRoles();
             this.selectIndex =0;
-        }else if(res==1){
+        }else{
             this.$message({
             showClose: true,
             message:res.Msg,
             type: 'warning'
             });
-        }else if(res==2){
-          this.$message({
-            showClose: true,
-            message:res.Msg,
-            type: 'warning'
-            });
-        }       
+        }      
       })
     },
 
@@ -284,19 +284,13 @@ export default {
             });
             this.getRoles();
             this.selectIndex =0;
-        }else if(res==1){
+        }else{
             this.$message({
             showClose: true,
             message:res.Msg,
             type: 'warning'
             });
-        }else if(res==2){
-          this.$message({
-            showClose: true,
-            message:res.Msg,
-            type: 'warning'
-            });
-        }       
+        }      
       })
     },
 
@@ -318,19 +312,13 @@ export default {
             type: 'success'
             });
             this.getRoles();
-        }else if(res==1){
+        }else{
             this.$message({
             showClose: true,
             message:res.Msg,
             type: 'warning'
             });
-        }else if(res==2){
-          this.$message({
-            showClose: true,
-            message:res.Msg,
-            type: 'warning'
-            });
-        }       
+        }  
       })
       this.selectIndex =0;
     },
@@ -348,11 +336,13 @@ export default {
         console.log(res);
         if(res.Code==0){
           this.data=res.Data;
-        }else if(res=="1"){
-          
-        }else if(res=="2"){
-          
-        }       
+        }else{
+          this.$message({
+            showClose: true,
+            message:res.Msg,
+            type: 'warning'
+            });
+        }      
       })
     },
   }

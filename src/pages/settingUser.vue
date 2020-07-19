@@ -1,39 +1,39 @@
 <template>
 	<div class="content">
 		<div class="item">
-			<h3 style="margin:10px; font-size:1.17em">用户添加</h3>
-			<el-form ref="form" style="width:auto" :model="form" label-width="150px">
-				<el-form-item label="工厂名称">
-					<el-select v-model="form.value" placeholder="请选择">
+			<h3>用户添加</h3>
+			<el-form ref="form" style="width:auto" :model="form" :rules="rules" label-width="150px">
+				<el-form-item label="工厂名称" prop="factoryID">
+					<el-select v-model="form.factoryID" placeholder="请选择">
 						<el-option
 						v-for="item in options"
-						:key="item.value"
-						:label="item.label"
-						:value="item.value">
+						:key="item.FactoryID"
+						:label="item.FactoryName"
+						:value="item.FactoryID">
 						</el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="用户名">
+				<el-form-item label="用户名" prop="username">
 					<el-input v-model="form.username"></el-input>
 				</el-form-item>
-				<el-form-item label="密码">
-					<el-input v-model="form.username"></el-input>
+				<el-form-item label="密码" prop="password">
+					<el-input v-model="form.password"></el-input>
 				</el-form-item>
 				<el-form-item label="确认密码">
-					<el-input v-model="form.username"></el-input>
+					<el-input v-model="form.confirm"></el-input>
 				</el-form-item>
 				<el-form-item label="真实姓名">
 					<el-input v-model="form.name"></el-input>
 				</el-form-item>
 				<el-form-item label="性别">
-					<el-radio v-model="sex" label="1">男</el-radio>
-  					<el-radio v-model="sex" label="2">女</el-radio>
+					<el-radio v-model="form.sex" label="1">男</el-radio>
+  					<el-radio v-model="form.sex" label="2">女</el-radio>
 				</el-form-item>
 				<el-form-item label="联系电话">
-					<el-input v-model="form.name"></el-input>
+					<el-input v-model="form.tel"></el-input>
 				</el-form-item>
 				<el-form-item label="选择仓库">
-					<el-select v-model="form.value" placeholder="请选择">
+					<el-select v-model="form.warehouse" placeholder="请选择">
 						<el-option
 						v-for="item in options"
 						:key="item.value"
@@ -43,19 +43,19 @@
 					</el-select>
 				</el-form-item>
 				<el-form-item label="状态">
-					<el-radio v-model="type" label="1">启用</el-radio>
-  					<el-radio v-model="type" label="2">禁用</el-radio>
+					<el-radio v-model="form.state" label="1">启用</el-radio>
+  					<el-radio v-model="form.state" label="2">禁用</el-radio>
 				</el-form-item>
 				<el-form-item label="是否为经销商">
-					<el-radio v-model="isAgcy" label="1">是</el-radio>
-  					<el-radio v-model="isAgcy" label="2">否</el-radio>
+					<el-radio v-model="form.isAgcy" label="1">是</el-radio>
+  					<el-radio v-model="form.isAgcy" label="2">否</el-radio>
 				</el-form-item>
 				<el-form-item label="经销商">
-					<el-input v-model="form.name"></el-input>
+					<el-input v-model="form.Agcyname"></el-input>
 				</el-form-item>
 			</el-form>
 			<div class="btn">
-				<el-button type="primary">保存</el-button>
+				<el-button type="primary" @click="AddUserInfo">保存</el-button>
 			</div>
 		</div>
 		<div class="item" >
@@ -83,16 +83,68 @@
 export default {
 	data(){
 		return {
-			form: {
-				username: '',
-				name: ''
+			form:{
+				factoryID:'',
+				username:'',
+				password:'',
+				confirm:'',
+				name:'',
+				sex:'',
+				tel:'',
+				warehouse:'',
+				state:'',
+				isAgcy:'',
+				Agcyname:''
 			},
+			rules: {
+        		factoryID:[
+          			{ required: true, message: '请选择正确的工厂', trigger: 'change' }
+        		],
+        		username:[
+          			{ required: true,  message: '请输入用户名', trigger: 'blur' }
+        		],
+        		password:[
+          			{ required: true,  message: '请输入密码', trigger: 'blur' }
+        		]
+      		},
 			options:[],
 			tableData: [],
-			sex:'1',
-			type:'1',
-			isAgcy:'1'
+			
+		};
+	},
+	mounted : function(){
+		var user = JSON.parse(sessionStorage.getItem('user'));
+		this.GetFactory(user.QyNum);
+	},
+	methods: {
+		GetFactory(CID){
+			this.$axios({
+        	method: 'post',
+        	url:'/FW/SettingUser.ashx',
+        	params: {
+          		action:"GetFactory",
+          		CID:CID
+        	}
+        	}).then(res=>{
+          		console.log(res);
+          		if(res.Code==0){
+            	this.options=res.Data;
+          		}else{
+					this.$message({
+            			showClose: true,
+            			message:res.Msg,
+            			type: 'warning'
+            		});
+          		}       
+      		})
+		},
+		Getwarehouse(){
+
+		},
+		AddUserInfo(){
+			
 		}
+
 	}
 }
 </script>
@@ -117,7 +169,7 @@ h3{
 </style>
 <style>
 .el-form-item {
-    margin-bottom: 5px;
+    margin-bottom: 20px;
 }
 .cell{
 	text-align: center;
@@ -128,5 +180,6 @@ h3{
 }
 .el-form-item__content {
 	text-align: center;
+	line-height: 40px;
 }
 </style>
