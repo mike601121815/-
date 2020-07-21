@@ -84,6 +84,7 @@ export default {
 	data(){
 		return {
 			form:{
+				CID:'',
 				factoryID:'',
 				username:'',
 				password:'',
@@ -114,6 +115,7 @@ export default {
 	},
 	mounted : function(){
 		var user = JSON.parse(sessionStorage.getItem('user'));
+		this.form.CID=user.QyNum;
 		this.GetFactory(user.QyNum);
 	},
 	methods: {
@@ -142,7 +144,52 @@ export default {
 
 		},
 		AddUserInfo(){
-			
+			if(this.form.password==this.form.confirm){
+				this.$axios({
+        			method: 'post',
+        			url:'/FW/SettingUser.ashx',
+        			params: {
+          				action:"AddUserInfo",
+          				form:this.form
+        			}
+        		}).then(res=>{
+          			console.log(res);
+          			if(res.Code==0){
+            			this.$message({
+            				showClose: true,
+            				message:res.Msg,
+            				type: 'success'
+            			});
+          			}else{
+						this.$message({
+            				showClose: true,
+            				message:res.Msg,
+            				type: 'warning'
+            			});
+          			}       
+      			})
+			}
+		},
+		GetUsers(){
+			this.$axios({
+        	method: 'post',
+        	url:'/FW/SettingUser.ashx',
+        	params: {
+          		action:"GetUsers",
+          		CID:CID
+        	}
+        	}).then(res=>{
+          		console.log(res);
+          		if(res.Code==0){
+            	this.options=res.Data;
+          		}else{
+					this.$message({
+            			showClose: true,
+            			message:res.Msg,
+            			type: 'warning'
+            		});
+          		}       
+      		})
 		}
 
 	}
