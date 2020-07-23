@@ -61,21 +61,47 @@
 		<div class="item" >
 			<h3>用户查询</h3>
 			<el-table :data="tableData" border>
-				<el-table-column label="用户名"></el-table-column>
-				<el-table-column label="真实姓名"></el-table-column>
-				<el-table-column label="性别"></el-table-column>
-				<el-table-column label="联系电话"></el-table-column>
-				<el-table-column label="状态"></el-table-column>
-				<el-table-column label="用户类型"></el-table-column>
-				<el-table-column label="负责经销商"></el-table-column>
-				<el-table-column label="角色设置"></el-table-column>
-				<el-table-column label="操作">
+				<el-table-column prop="UserName" label="用户名"></el-table-column>
+				<el-table-column prop="DisplayName" label="真实姓名"></el-table-column>
+				<el-table-column label="性别">
+					<template slot-scope="scope">
+						{{scope.row.UserGender ? '男' : '女'}}
+					</template>
+				</el-table-column>
+				<el-table-column prop="UserTel" label="联系电话"></el-table-column>
+				<el-table-column prop="UserStatus" label="状态"></el-table-column>
+				<el-table-column prop="UserType" label="用户类型"></el-table-column>
+				<el-table-column prop="" label="负责经销商"></el-table-column>
+				<el-table-column prop="UserName" label="角色设置">
+					<template slot-scope="scope">
+						<el-button type="text" @click="GetRole(scope.row)" size="small">设置</el-button>
+					</template>
+				</el-table-column>
+				<el-table-column prop="UserName" label="操作">
 					<template>
-						<el-button type="text">添加</el-button>
+						<el-button type="text" @click="UpdataUser" size="small">编辑</el-button>
+						<el-button type="text" @click="DisableUser" size="small">禁用</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
 		</div>
+		<el-dialog title="设置角色" :visible.sync="dialogVisible" width="30%">
+      		<el-table ref="multipleTable" highlight-current-row
+    @current-change="handleCurrentChange" @select="selectChange" @selection-change="handleSelectionChange" :data="roles" border>
+				<!-- <el-table-column>
+					<template slot-scope="scope">
+						<el-checkbox @change="checkboxChange(scope.row)" v-model="scope.row.checked"></el-checkbox>
+					</template>
+				</el-table-column> -->
+				<el-table-column type="selection" width="55"></el-table-column>
+				<el-table-column prop="RoleName" label="角色"></el-table-column>
+				<el-table-column prop="Remark" label="角色描述"></el-table-column>
+			</el-table>
+      		<span slot="footer" class="dialog-footer">
+        		<el-button @click="dialogVisible = false">取 消</el-button>
+        		<el-button type="primary" @click="SetRole">确 定</el-button>
+      		</span>
+    	</el-dialog>
 	</div>
 </template>
 
@@ -110,15 +136,32 @@ export default {
       		},
 			options:[],
 			tableData: [],
-			
+			dialogVisible: false,
+			roles:[],
+			multipleSelection:[],
+			userId:null,
+			roleId:null,
 		};
 	},
 	mounted : function(){
 		var user = JSON.parse(sessionStorage.getItem('user'));
 		this.form.CID=user.QyNum;
 		this.GetFactory(user.QyNum);
+		this.GetUsers(user.QyNum);
 	},
 	methods: {
+		selectChange(selection, row){
+			this.$refs.multipleTable.clearSelection();
+			this.$refs.multipleTable.toggleRowSelection(row)
+		},
+		handleSelectionChange(val) {
+			this.multipleSelection = val;
+		},
+		handleCurrentChange(row,oldrow){
+			this.$refs.multipleTable.clearSelection();
+			this.$refs.multipleTable.toggleRowSelection(row)
+			this.roleId = row.RoleId
+		},
 		GetFactory(CID){
 			this.$axios({
         	method: 'post',
@@ -128,7 +171,6 @@ export default {
           		CID:CID
         	}
         	}).then(res=>{
-          		console.log(res);
           		if(res.Code==0){
             	this.options=res.Data;
           		}else{
@@ -153,7 +195,6 @@ export default {
           				form:this.form
         			}
         		}).then(res=>{
-          			console.log(res);
           			if(res.Code==0){
             			this.$message({
             				showClose: true,
@@ -170,7 +211,7 @@ export default {
       			})
 			}
 		},
-		GetUsers(){
+		GetUsers(CID){
 			this.$axios({
         	method: 'post',
         	url:'/FW/SettingUser.ashx',
@@ -179,9 +220,8 @@ export default {
           		CID:CID
         	}
         	}).then(res=>{
-          		console.log(res);
           		if(res.Code==0){
-            	this.options=res.Data;
+            	this.tableData=res.Data;
           		}else{
 					this.$message({
             			showClose: true,
@@ -190,8 +230,63 @@ export default {
             		});
           		}       
       		})
-		}
+		},
+		GetRole(data){
+			this.dialogVisible=true;
+			this.userId = data.UserId
+			//初始化获取角色
+      		this.$axios({
+        		method: 'post',
+        		url:'/FW/RoleAssign.ashx',
+        		params: {
+          			action:"getRoles"
+        		}
+      		})
+      		.then(res=>{
+        		if(res.Code==0){
+          			this.roles=res.Data
+        		}else{
+          			this.$message({
+            			showClose: true,
+            			message:res.Msg,
+            			type: 'warning'
+            		});
+        		}      
+      		})
+		},
+		SetRole(){
+			console.log(this.userId,this.roleId)
+			this.$axios({
+        		method: 'post',
+        		url:'/FW/SettingUser.ashx',
+        		params: {
+					  action:"SetRole",
+					  UserId:this.userId,
+					  RoleId:this.roleId
+        		}
+      		})
+      		.then(res=>{
+        		if(res.Code==0){
+          			this.$message({
+            			showClose: true,
+            			message:res.Msg,
+            			type: 'success'
+            		});
+        		}else{
+          			this.$message({
+            			showClose: true,
+            			message:res.Msg,
+            			type: 'warning'
+            		});
+        		}      
+      		})
+		},
+		UpdataUser(){
 
+		},
+		DisableUser(){
+
+		}
 	}
 }
 </script>
@@ -229,4 +324,11 @@ h3{
 	text-align: center;
 	line-height: 40px;
 }
+.el-table th.gutter{    
+    display: table-cell !important;
+}
+.el-dialog__body {
+    padding: 0px 20px;
+}
+
 </style>
