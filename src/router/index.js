@@ -35,7 +35,11 @@ import scurryGoodsTJ from '../pages/scurryGoodsTJ.vue'
 import frmscurryop from '../pages/frmscurryop.vue'
 import scurryMng from '../pages/scurryMng.vue'
 import parameter from '../pages/parameter.vue'
+import moduleSettings from '../pages/moduleSettings.vue'
 
+
+
+import productStorage from '../pages/productStorage.vue'
 
 Vue.use(Router)
 
@@ -179,6 +183,14 @@ export default new Router({
           path: 'parameter',
           name: 'parameter',
           component: parameter
+        },{
+          path: 'moduleSettings',
+          name: 'moduleSettings',
+          component: moduleSettings
+        },{
+          path: 'productStorage',
+          name: 'productStorage',
+          component: productStorage
         },
       ]
     }
