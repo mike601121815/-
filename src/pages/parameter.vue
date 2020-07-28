@@ -24,7 +24,7 @@
           <el-tree
             :data="data"
             show-checkbox
-            node-key="Id"
+            node-key="ModuleId"
             :default-checked-keys="checkeds"
             default-expand-all ref="tree"
             :props="defaultProps"
@@ -91,7 +91,7 @@ export default {
       checkeds:[],
       defaultProps: {
         children: "Child",
-        label: "Lable"
+        label: "ModuleName"
       },
       title:"",
       dialogtype:0,

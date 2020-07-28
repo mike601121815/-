@@ -1,18 +1,23 @@
 <template>
 	<div class="content">
 		<el-button type="primary" style="margin: 20px 0 10px 0;" @click="dialogVisible = true">添加</el-button>
-		<el-table :data="tableData" border>
-				<el-table-column prop="" label="模块名称"></el-table-column>
-				<el-table-column prop="" label="模块编号"></el-table-column>
-                <el-table-column prop="" label="模块路径"></el-table-column>
-				<el-table-column label="模块状态">
+		<el-table :data="tableData" border row-key="ModuleId" :header-cell-style="{'text-align':'center'}"
+		:tree-props="{children: 'Child', hasChildren: 'hasChildren'}">>
+				<el-table-column prop="ModuleName" align="left" label="模块名称"></el-table-column>
+				<el-table-column prop="ModuleId" align="center"  label="模块编号"></el-table-column>
+                <el-table-column prop="WebPageUrl" align="center"  label="模块路径"></el-table-column>
+				<el-table-column align="center"  label="模块状态">
 					<template slot-scope="scope">
-						{{scope.row ? '启用' : '禁止'}}
+						{{scope.row.Status ? '启用' : '禁止'}}
 					</template>
 				</el-table-column>
-				<el-table-column prop="" label="图标"></el-table-column>
-				<el-table-column prop="" label="模块序号"></el-table-column>
-				<el-table-column prop="UserName" label="操作">
+				<el-table-column align="center"  label="图标">
+					<template slot-scope="scope">
+						<i :class="scope.row.icon" style="font-size:22px"></i>
+					</template>
+				</el-table-column>
+				<el-table-column align="center"  prop="SeqNo" label="模块序号"></el-table-column>
+				<el-table-column align="center"  prop="UserName" label="操作">
 					<template>
 						<el-button type="text"  size="small">编辑</el-button>
 						<el-button type="text"  size="small">删除</el-button>
@@ -94,11 +99,12 @@ export default {
 		GetModules(){
 			this.$axios({
         	method: 'post',
-        	url:'/FW/SettingModules.ashx',
+        	url:'/FW/RoleAssign.ashx',
         	params: {
-          		action:"GetModules"
+          		action:"getModules"
         	}
         	}).then(res=>{
+				console.log(res)
           		if(res.Code==0){
             	this.tableData=res.Data;
           		}else{
@@ -128,6 +134,7 @@ export default {
 .el-table th.gutter{    
     display: table-cell !important;
 }
+
 </style>
 <style>
 
