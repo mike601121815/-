@@ -44,11 +44,11 @@
 				</el-form-item>
 				<el-form-item label="状态">
 					<el-radio v-model="form.state" label="1">启用</el-radio>
-  					<el-radio v-model="form.state" label="2">禁用</el-radio>
+  					<el-radio v-model="form.state" label="0">禁用</el-radio>
 				</el-form-item>
 				<el-form-item label="是否为经销商">
 					<el-radio v-model="form.isAgcy" label="1">是</el-radio>
-  					<el-radio v-model="form.isAgcy" label="2">否</el-radio>
+  					<el-radio v-model="form.isAgcy" label="0">否</el-radio>
 				</el-form-item>
 				<el-form-item label="经销商">
 					<el-input v-model="form.Agcyname"></el-input>
@@ -78,9 +78,9 @@
 					</template>
 				</el-table-column>
 				<el-table-column prop="UserName" label="操作">
-					<template>
-						<el-button type="text" @click="UpdataUser" size="small">编辑</el-button>
-						<el-button type="text" @click="DisableUser" size="small">禁用</el-button>
+					<template slot-scope="scope">
+						<el-button type="text" @click="UpdataUser(scope)" size="small">编辑</el-button>
+						<el-button type="text" @click="DisableUser(scope)" size="small">禁用</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -281,10 +281,10 @@ export default {
         		}      
       		})
 		},
-		UpdataUser(){
-
+		UpdataUser(scope){
+			console.log(scope.row)
 		},
-		DisableUser(){
+		DisableUser(scope){
 
 		}
 	}
