@@ -7,8 +7,9 @@
 						<el-option
 						v-for="item in options"
 						:key="item.value"
-						:label="item.label"
 						:value="item.value">
+							<i :class="item.value"></i>
+							<span>{{item.value}}</span>
 						</el-option>
 					</el-select>
 				</el-form-item>
@@ -40,6 +41,7 @@
 </template>
 
 <script>
+import moduleName from '../utils/name.json';
 export default {
 	data(){
 		return {
@@ -48,14 +50,16 @@ export default {
 				name: '',
 				value: null
 			},
-			options: [{
-				value: '选项1',
-				label: '黄金糕'
-				}, {
-				value: '选项2',
-				label: '双皮奶'
-			}],
+			options: [],
 			tableData: []
+		}
+	},
+	mounted(){
+		for(let i in moduleName){
+			this.options.push({
+				value:moduleName[i]._prevClass,
+				label:moduleName[i]._prevClass
+			})
 		}
 	}
 }
