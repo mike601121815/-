@@ -39,6 +39,7 @@ import moduleSettings from '../pages/moduleSettings.vue'
 
 
 
+
 import productStorage from '../pages/productStorage.vue'
 
 Vue.use(Router)

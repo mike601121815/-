@@ -19,20 +19,20 @@
 				<el-form-item label="密码" prop="password">
 					<el-input v-model="form.password"></el-input>
 				</el-form-item>
-				<el-form-item label="确认密码">
-					<el-input v-model="form.confirm"></el-input>
+				<el-form-item label="确认密码" prop="confirm">
+					<el-input v-model="form.confirm" ></el-input>
 				</el-form-item>
-				<el-form-item label="真实姓名">
+				<el-form-item label="真实姓名" prop="name">
 					<el-input v-model="form.name"></el-input>
 				</el-form-item>
-				<el-form-item label="性别">
+				<el-form-item label="性别" prop="sex">
 					<el-radio v-model="form.sex" label="1">男</el-radio>
   					<el-radio v-model="form.sex" label="2">女</el-radio>
 				</el-form-item>
-				<el-form-item label="联系电话">
+				<el-form-item label="联系电话" prop="tel">
 					<el-input v-model="form.tel"></el-input>
 				</el-form-item>
-				<el-form-item label="选择仓库">
+				<el-form-item label="选择仓库" prop="warehouse">
 					<el-select v-model="form.warehouse" placeholder="请选择">
 						<el-option
 						v-for="item in options"
@@ -42,20 +42,20 @@
 						</el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="状态">
+				<el-form-item label="状态" prop="state">
 					<el-radio v-model="form.state" label="1">启用</el-radio>
   					<el-radio v-model="form.state" label="0">禁用</el-radio>
 				</el-form-item>
-				<el-form-item label="是否为经销商">
+				<el-form-item label="是否为经销商" prop="isAgcy">
 					<el-radio v-model="form.isAgcy" label="1">是</el-radio>
   					<el-radio v-model="form.isAgcy" label="0">否</el-radio>
 				</el-form-item>
-				<el-form-item label="经销商">
+				<el-form-item label="经销商" prop="Agcyname">
 					<el-input v-model="form.Agcyname"></el-input>
 				</el-form-item>
 			</el-form>
 			<div class="btn">
-				<el-button type="primary" @click="AddUserInfo">保存</el-button>
+				<el-button type="primary" @click="AddUserInfo('form')">保存</el-button>
 			</div>
 		</div>
 		<div class="item" >
@@ -106,8 +106,18 @@
 </template>
 
 <script>
+import {validateTwoPhone} from '../utils/rules'
 export default {
 	data(){
+		var ruleconfirm = (rule, value, callback) => {
+        	if (value === '') {
+          		callback(new Error('请再次输入密码'));
+        	} else if (value !== this.form.password) {
+          		callback(new Error('两次输入密码不一致!'));
+        	} else {
+          		callback();
+        	}
+      		};
 		return {
 			form:{
 				CID:'',
@@ -116,13 +126,14 @@ export default {
 				password:'',
 				confirm:'',
 				name:'',
-				sex:'',
+				sex:'1',
 				tel:'',
 				warehouse:'',
-				state:'',
-				isAgcy:'',
+				state:'1',
+				isAgcy:'1',
 				Agcyname:''
 			},
+			
 			rules: {
         		factoryID:[
           			{ required: true, message: '请选择正确的工厂', trigger: 'change' }
@@ -132,7 +143,24 @@ export default {
         		],
         		password:[
           			{ required: true,  message: '请输入密码', trigger: 'blur' }
-        		]
+				],
+				confirm:[
+					{ required: true,  message: '请输入确认密码', trigger: 'blur' },
+					{ validator: ruleconfirm,trigger: "blur"}
+				],
+				name:[
+          			{ required: true,  message: '请输入真实姓名', trigger: 'blur' }
+				],
+				tel:[
+					{ required: true,  message: '请输入联系电话', trigger: 'blur' },
+					{ validator: validateTwoPhone,trigger: "blur"}
+				],
+				warehouse:[
+					{ required: true,  message: '请选择仓库', trigger: 'blur' }
+				],
+				Agcyname:[
+					{ required: true,  message: '请输入经销商', trigger: 'blur' }
+				],
       		},
 			options:[],
 			tableData: [],
@@ -185,9 +213,10 @@ export default {
 		Getwarehouse(){
 
 		},
-		AddUserInfo(){
-			if(this.form.password==this.form.confirm){
-				this.$axios({
+		AddUserInfo(form){
+			this.$refs[form].validate((valid) => {
+          		if (valid) {
+					  this.$axios({
         			method: 'post',
         			url:'/FW/SettingUser.ashx',
         			params: {
@@ -209,7 +238,11 @@ export default {
             			});
           			}       
       			})
-			}
+          		} else {
+            		console.log('error submit!!');
+            		return false;
+          		}
+        	});
 		},
 		GetUsers(CID){
 			this.$axios({

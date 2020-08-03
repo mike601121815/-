@@ -1,8 +1,77 @@
 <template>
 	<div class="content">
-		<div class="item">
-			<h3>用户添加</h3>
-			<el-form ref="form" style="width:auto" :model="form" :rules="rules" label-width="150px">
+		<div >
+			<h3>创建入库单</h3>
+			<div class="btn">
+				<el-button type="primary" @click="AddUserInfo">查询</el-button>
+				<el-button type="primary" @click="AddUserInfo">创建入库单</el-button>
+			</div>
+			<div style="margin:0 0 0 20px">
+				<el-form ref="form" inline style="width:auto" :model="form" :rules="rules" label-width="auto">
+				<el-form-item label="入库单号" prop="username">
+					<el-input v-model="form.username"></el-input>
+				</el-form-item>
+				<el-form-item label="单据类型" prop="factoryID">
+					<el-select v-model="form.factoryID" placeholder="请选择">
+						<el-option
+						v-for="item in options"
+						:key="item.FactoryID"
+						:label="item.FactoryName"
+						:value="item.FactoryID">
+						</el-option>
+					</el-select>
+				</el-form-item>
+				
+				<el-form-item label="入库库房" prop="password">
+					<el-select v-model="form.factoryID" placeholder="请选择">
+						<el-option
+						v-for="item in options"
+						:key="item.FactoryID"
+						:label="item.FactoryName"
+						:value="item.FactoryID">
+						</el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="建单时间">
+					<el-date-picker
+						v-model="form.starttime" value-format="yyyy-MM-dd"
+						type="date"
+						placeholder="选择日期">
+					</el-date-picker>
+				</el-form-item>
+				<el-form-item label="至">
+					<el-date-picker
+						v-model="form.starttime" value-format="yyyy-MM-dd"
+						type="date"
+						placeholder="选择日期">
+					</el-date-picker>
+				</el-form-item>
+			</el-form>
+			</div>
+		</div>
+		<div >
+			<el-table :data="tableData" align="center" border>
+				<el-table-column prop="UserName" label="入库单号"></el-table-column>
+				<el-table-column prop="DisplayName" label="单据类型"></el-table-column>
+				<el-table-column label="入库时间"></el-table-column>
+				<el-table-column prop="UserTel" label="入库库房"></el-table-column>
+				<el-table-column prop="UserStatus" label="退货经销商"></el-table-column>
+				<el-table-column prop="UserType" label="操作员"></el-table-column>
+				<el-table-column prop="" label="是否下载">
+					<template slot-scope="scope">
+						{{scope.row.UserGender ? '是' : '否'}}
+					</template>
+				</el-table-column>
+				<el-table-column prop="UserName" label="操作">
+					<template>
+						<el-button type="text" @click="UpdataUser" size="small">修改</el-button>
+						<el-button type="text" @click="DisableUser" size="small">删除</el-button>
+					</template>
+				</el-table-column>
+			</el-table>
+		</div>
+		<el-dialog title="设置角色" :visible.sync="dialogVisible" width="30%">
+      		<el-form ref="form" style="width:auto" :model="form" :rules="rules" label-width="150px">
 				<el-form-item label="工厂名称" prop="factoryID">
 					<el-select v-model="form.factoryID" placeholder="请选择">
 						<el-option
@@ -54,49 +123,6 @@
 					<el-input v-model="form.Agcyname"></el-input>
 				</el-form-item>
 			</el-form>
-			<div class="btn">
-				<el-button type="primary" @click="AddUserInfo">保存</el-button>
-			</div>
-		</div>
-		<div class="item" >
-			<h3>用户查询</h3>
-			<el-table :data="tableData" border>
-				<el-table-column prop="UserName" label="用户名"></el-table-column>
-				<el-table-column prop="DisplayName" label="真实姓名"></el-table-column>
-				<el-table-column label="性别">
-					<template slot-scope="scope">
-						{{scope.row.UserGender ? '男' : '女'}}
-					</template>
-				</el-table-column>
-				<el-table-column prop="UserTel" label="联系电话"></el-table-column>
-				<el-table-column prop="UserStatus" label="状态"></el-table-column>
-				<el-table-column prop="UserType" label="用户类型"></el-table-column>
-				<el-table-column prop="" label="负责经销商"></el-table-column>
-				<el-table-column prop="UserName" label="角色设置">
-					<template slot-scope="scope">
-						<el-button type="text" @click="GetRole(scope.row)" size="small">设置</el-button>
-					</template>
-				</el-table-column>
-				<el-table-column prop="UserName" label="操作">
-					<template>
-						<el-button type="text" @click="UpdataUser" size="small">编辑</el-button>
-						<el-button type="text" @click="DisableUser" size="small">禁用</el-button>
-					</template>
-				</el-table-column>
-			</el-table>
-		</div>
-		<el-dialog title="设置角色" :visible.sync="dialogVisible" width="30%">
-      		<el-table ref="multipleTable" highlight-current-row
-    @current-change="handleCurrentChange" @select="selectChange" @selection-change="handleSelectionChange" :data="roles" border>
-				<!-- <el-table-column>
-					<template slot-scope="scope">
-						<el-checkbox @change="checkboxChange(scope.row)" v-model="scope.row.checked"></el-checkbox>
-					</template>
-				</el-table-column> -->
-				<el-table-column type="selection" width="55"></el-table-column>
-				<el-table-column prop="RoleName" label="角色"></el-table-column>
-				<el-table-column prop="Remark" label="角色描述"></el-table-column>
-			</el-table>
       		<span slot="footer" class="dialog-footer">
         		<el-button @click="dialogVisible = false">取 消</el-button>
         		<el-button type="primary" @click="SetRole">确 定</el-button>
@@ -299,14 +325,20 @@ h3{
 .title{
   text-align: left;
 }
-.item{
-	margin: 20px 0;
-	padding: 10px;
+.content{
+	margin:10px;
 	border: 1px solid #e3e3e3;
 }
 .btn{
-	width: 500px;
-	margin:0 150px;
+	margin:0 0 10px 30px;
 }
+
 </style>
 <style>
+.el-form--inline .el-form-item__content {
+    width: 150px;
+}
+.el-date-editor.el-input, .el-date-editor.el-input__inner {
+    width: 150px;
+}
+</style>

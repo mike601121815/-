@@ -35,7 +35,7 @@
     <el-dialog
       :title="title"
       :visible.sync="dialogVisible"
-      width="30%"
+      width="340px"
       >
       <el-form ref="ruleForm1" :model="role" :rules="rules1" >
         <el-form-item prop="RoleName">
