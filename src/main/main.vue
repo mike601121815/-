@@ -209,3 +209,11 @@ background-color: rgba(125, 125, 125, 0.7);
 -webkit-border-radius: 6px;
 }
 </style>
+<style>
+.el-table th.gutter{    
+    display: table-cell !important;
+}
+.el-dialog__body {
+    padding: 10px 20px;;
+}
+</style>

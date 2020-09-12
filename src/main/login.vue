@@ -55,8 +55,6 @@ export default {
         username: '',//用户名
         usercode:'',//用户编号
         password: '',//用户密码
-        power1:'',//用户一级权限
-        power2:'',//用户二级权限
       },
       rules1: {
         qyNum:[
@@ -89,15 +87,17 @@ export default {
         }
       })
       .then(res=>{
-        if(res!=null){
-          var user=res;
+        if(res.Code==0){
+          var user=res.Data;
           sessionStorage.setItem('user',JSON.stringify(user));
           this.$router.push({name:'homepage'})
-        }else if(res=="1"){
-          
-        }else if(res=="2"){
-          
-        }       
+        }else {
+          this.$message({
+            			showClose: true,
+            			message:res.Msg,
+            			type: 'warning'
+            		});
+        }      
       })
     },
 

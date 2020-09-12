@@ -3,8 +3,8 @@
 		<div >
 			<h3>创建入库单</h3>
 			<div class="btn">
-				<el-button type="primary" @click="AddUserInfo">查询</el-button>
-				<el-button type="primary" @click="AddUserInfo">创建入库单</el-button>
+				<el-button type="primary" @click="SelectStorage">查询</el-button>
+				<el-button type="primary" @click="AddStorage">创建入库单</el-button>
 			</div>
 			<div style="margin:0 0 0 20px">
 				<el-form ref="form" inline style="width:auto" :model="form" :rules="rules" label-width="auto">
@@ -14,10 +14,10 @@
 				<el-form-item label="单据类型" prop="factoryID">
 					<el-select v-model="form.factoryID" placeholder="请选择">
 						<el-option
-						v-for="item in options"
-						:key="item.FactoryID"
-						:label="item.FactoryName"
-						:value="item.FactoryID">
+						v-for="item in storage"
+						:key="item.type"
+						:label="item.storage"
+						:value="item.type">
 						</el-option>
 					</el-select>
 				</el-form-item>
@@ -25,7 +25,7 @@
 				<el-form-item label="入库库房" prop="password">
 					<el-select v-model="form.factoryID" placeholder="请选择">
 						<el-option
-						v-for="item in options"
+						v-for="item in factory"
 						:key="item.FactoryID"
 						:label="item.FactoryName"
 						:value="item.FactoryID">
@@ -64,68 +64,87 @@
 				</el-table-column>
 				<el-table-column prop="UserName" label="操作">
 					<template>
-						<el-button type="text" @click="UpdataUser" size="small">修改</el-button>
-						<el-button type="text" @click="DisableUser" size="small">删除</el-button>
+						<el-button type="text" @click="UpdataStorage" size="small">修改</el-button>
+						<el-button type="text" @click="DisableStorager" size="small">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
 		</div>
-		<el-dialog title="设置角色" :visible.sync="dialogVisible" width="30%">
-      		<el-form ref="form" style="width:auto" :model="form" :rules="rules" label-width="150px">
-				<el-form-item label="工厂名称" prop="factoryID">
+		<el-dialog title="创建入库单" :visible.sync="dialogVisible" width="60%">
+      		<el-form ref="form" inline style="width:auto" :model="form" :rules="rules" label-width="100px">
+				<h3 style="border-width: 0 0 1px;border-style: solid;">单据基础信息</h3>
+				<el-form-item label="入库单号" prop="factoryID">
+					<el-input v-model="form.username"></el-input>
+				</el-form-item>
+				<el-form-item label="入库时间" prop="username">
+					<el-input v-model="form.username"></el-input>
+				</el-form-item>
+				<el-form-item label="入库类型" prop="password">
 					<el-select v-model="form.factoryID" placeholder="请选择">
 						<el-option
-						v-for="item in options"
-						:key="item.FactoryID"
-						:label="item.FactoryName"
-						:value="item.FactoryID">
+						v-for="item in storage"
+						:key="item.type"
+						:label="item.storage"
+						:value="item.type">
 						</el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="用户名" prop="username">
-					<el-input v-model="form.username"></el-input>
-				</el-form-item>
-				<el-form-item label="密码" prop="password">
-					<el-input v-model="form.password"></el-input>
-				</el-form-item>
-				<el-form-item label="确认密码">
-					<el-input v-model="form.confirm"></el-input>
-				</el-form-item>
-				<el-form-item label="真实姓名">
-					<el-input v-model="form.name"></el-input>
-				</el-form-item>
-				<el-form-item label="性别">
-					<el-radio v-model="form.sex" label="1">男</el-radio>
-  					<el-radio v-model="form.sex" label="2">女</el-radio>
-				</el-form-item>
-				<el-form-item label="联系电话">
-					<el-input v-model="form.tel"></el-input>
-				</el-form-item>
-				<el-form-item label="选择仓库">
+				<el-form-item label="入库库房">
 					<el-select v-model="form.warehouse" placeholder="请选择">
 						<el-option
-						v-for="item in options"
+						v-for="item in factory"
 						:key="item.value"
 						:label="item.label"
 						:value="item.value">
 						</el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="状态">
-					<el-radio v-model="form.state" label="1">启用</el-radio>
-  					<el-radio v-model="form.state" label="2">禁用</el-radio>
+				<h3 style="border-width: 0 0 1px;border-style: solid;">单据明细信息</h3>
+				<el-form-item label="产品">
+					<el-select v-model="form.warehouse" placeholder="请选择">
+						<el-option
+						v-for="item in factory"
+						:key="item.value"
+						:label="item.label"
+						:value="item.value">
+						</el-option>
+					</el-select>
 				</el-form-item>
-				<el-form-item label="是否为经销商">
-					<el-radio v-model="form.isAgcy" label="1">是</el-radio>
-  					<el-radio v-model="form.isAgcy" label="2">否</el-radio>
+				<el-form-item label="拖数量">
+					<el-input v-model="form.tel"></el-input>
 				</el-form-item>
-				<el-form-item label="经销商">
-					<el-input v-model="form.Agcyname"></el-input>
+				<el-form-item label="箱数量">
+					<el-input v-model="form.tel"></el-input>
 				</el-form-item>
+				<el-form-item label="盒数量">
+					<el-input v-model="form.confirm"></el-input>
+				</el-form-item>
+				<el-form-item label=" ">
+					<el-button type="primary" @click="DisableStorager" size="small">添加到明细</el-button>
+				</el-form-item>
+				
 			</el-form>
+			<div >
+				<el-table :data="tableData" align="center" border>
+					<el-table-column prop="UserName" label="序号"></el-table-column>
+					<el-table-column prop="DisplayName" label="产品编号"></el-table-column>
+					<el-table-column label="产品名称"></el-table-column>
+					<el-table-column prop="UserTel" label="包装"></el-table-column>
+					<el-table-column prop="UserStatus" label="拖数量"></el-table-column>
+					<el-table-column prop="UserType" label="箱数量"></el-table-column>
+					<el-table-column prop="" label="盒数量"></el-table-column>
+					<el-table-column prop="UserName" label="操作">
+						<template>
+							<el-button type="text" @click="UpdataStorage" size="small">修改</el-button>
+							<el-button type="text" @click="DisableStorager" size="small">删除</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
+			</div>
+
       		<span slot="footer" class="dialog-footer">
-        		<el-button @click="dialogVisible = false">取 消</el-button>
-        		<el-button type="primary" @click="SetRole">确 定</el-button>
+        		<el-button @click="dialogVisible = false">添加后继续</el-button>
+        		<el-button type="primary" @click="SetStorage">添加后返回</el-button>
       		</span>
     	</el-dialog>
 	</div>
@@ -159,159 +178,34 @@ export default {
         		password:[
           			{ required: true,  message: '请输入密码', trigger: 'blur' }
         		]
-      		},
-			options:[],
+			},
+			factory:[],
+			storage:[{
+				type:0,
+				storage:"生产入库"
+			},{
+				type:1,
+				storage:"退货入库"
+			}],
 			tableData: [],
-			dialogVisible: false,
-			roles:[],
-			multipleSelection:[],
-			userId:null,
-			roleId:null,
+			dialogVisible: false
 		};
 	},
 	mounted : function(){
 		var user = JSON.parse(sessionStorage.getItem('user'));
 		this.form.CID=user.QyNum;
-		this.GetFactory(user.QyNum);
-		this.GetUsers(user.QyNum);
+
 	},
 	methods: {
-		selectChange(selection, row){
-			this.$refs.multipleTable.clearSelection();
-			this.$refs.multipleTable.toggleRowSelection(row)
-		},
-		handleSelectionChange(val) {
-			this.multipleSelection = val;
-		},
-		handleCurrentChange(row,oldrow){
-			this.$refs.multipleTable.clearSelection();
-			this.$refs.multipleTable.toggleRowSelection(row)
-			this.roleId = row.RoleId
-		},
-		GetFactory(CID){
-			this.$axios({
-        	method: 'post',
-        	url:'/FW/SettingUser.ashx',
-        	params: {
-          		action:"GetFactory",
-          		CID:CID
-        	}
-        	}).then(res=>{
-          		if(res.Code==0){
-            	this.options=res.Data;
-          		}else{
-					this.$message({
-            			showClose: true,
-            			message:res.Msg,
-            			type: 'warning'
-            		});
-          		}       
-      		})
-		},
-		Getwarehouse(){
-
-		},
-		AddUserInfo(){
-			if(this.form.password==this.form.confirm){
-				this.$axios({
-        			method: 'post',
-        			url:'/FW/SettingUser.ashx',
-        			params: {
-          				action:"AddUserInfo",
-          				form:this.form
-        			}
-        		}).then(res=>{
-          			if(res.Code==0){
-            			this.$message({
-            				showClose: true,
-            				message:res.Msg,
-            				type: 'success'
-            			});
-          			}else{
-						this.$message({
-            				showClose: true,
-            				message:res.Msg,
-            				type: 'warning'
-            			});
-          			}       
-      			})
-			}
-		},
-		GetUsers(CID){
-			this.$axios({
-        	method: 'post',
-        	url:'/FW/SettingUser.ashx',
-        	params: {
-          		action:"GetUsers",
-          		CID:CID
-        	}
-        	}).then(res=>{
-          		if(res.Code==0){
-            	this.tableData=res.Data;
-          		}else{
-					this.$message({
-            			showClose: true,
-            			message:res.Msg,
-            			type: 'warning'
-            		});
-          		}       
-      		})
-		},
-		GetRole(data){
+		SelectStorage(){},
+		AddStorage(){
 			this.dialogVisible=true;
-			this.userId = data.UserId
-			//初始化获取角色
-      		this.$axios({
-        		method: 'post',
-        		url:'/FW/RoleAssign.ashx',
-        		params: {
-          			action:"getRoles"
-        		}
-      		})
-      		.then(res=>{
-        		if(res.Code==0){
-          			this.roles=res.Data
-        		}else{
-          			this.$message({
-            			showClose: true,
-            			message:res.Msg,
-            			type: 'warning'
-            		});
-        		}      
-      		})
 		},
-		SetRole(){
-			console.log(this.userId,this.roleId)
-			this.$axios({
-        		method: 'post',
-        		url:'/FW/SettingUser.ashx',
-        		params: {
-					  action:"SetRole",
-					  UserId:this.userId,
-					  RoleId:this.roleId
-        		}
-      		})
-      		.then(res=>{
-        		if(res.Code==0){
-          			this.$message({
-            			showClose: true,
-            			message:res.Msg,
-            			type: 'success'
-            		});
-        		}else{
-          			this.$message({
-            			showClose: true,
-            			message:res.Msg,
-            			type: 'warning'
-            		});
-        		}      
-      		})
-		},
-		UpdataUser(){
+		UpdataStorage(){},
+		DisableStorager(){},
+		SetStorage(){
 
-		},
-		DisableUser(){
-
+			this.dialogVisible=false;
 		}
 	}
 }
@@ -320,7 +214,7 @@ export default {
 <style scoped>
 h3{
 	margin:10px; 
-	font-size:1.17em
+	font-size:1.17em;
 }
 .title{
   text-align: left;
@@ -332,7 +226,9 @@ h3{
 .btn{
 	margin:0 0 10px 30px;
 }
-
+.el-dialog__body {
+    padding: 0px 20px;
+}
 </style>
 <style>
 .el-form--inline .el-form-item__content {
@@ -340,5 +236,8 @@ h3{
 }
 .el-date-editor.el-input, .el-date-editor.el-input__inner {
     width: 150px;
+}
+.el-dialog__body {
+    padding: 0px 20px;
 }
 </style>

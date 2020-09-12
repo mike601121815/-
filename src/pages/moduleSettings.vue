@@ -26,7 +26,7 @@
 				</el-table-column>
 			</el-table>
 		<el-dialog :title="dialogtype==1 ? '添加模块':'编辑模块'" :visible.sync="dialogVisible" width="740px">
-      		<el-form ref="form" inline style="width:auto" :model="form" :rules="rules" label-width="120px">
+      		<el-form ref="form" inline style="width:auto" :model="form" :rules="rules" label-width="100px">
 				<el-form-item label="模块编号" prop="ModuleId">
                     <el-input v-model="form.ModuleId"></el-input>
                 </el-form-item>
@@ -60,7 +60,7 @@
 				<el-form-item label="模块序号" prop="SeqNo">
 					<el-input v-model="form.SeqNo"></el-input>
 				</el-form-item>
-				<el-form-item label="模块状态" prop="Status">
+				<el-form-item label="模块状态" prop="Status" style="line-height: 40px;text-align: center;">
 					<el-radio v-model="form.Status" label="0">启用</el-radio>
   					<el-radio v-model="form.Status" label="1">禁用</el-radio>
 				</el-form-item>
@@ -256,15 +256,5 @@ export default {
 	margin: 20px 0;
 	padding: 10px;
 	border: 1px solid #e3e3e3;
-}
-
-
-</style>
-<style>
-.el-table th.gutter{    
-    display: table-cell !important;
-}
-.el-dialog__body {
-    padding: 10px 20px;;
 }
 </style>

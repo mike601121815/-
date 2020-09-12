@@ -60,24 +60,24 @@
 		</div>
 		<div class="item" >
 			<h3>用户查询</h3>
-			<el-table :data="tableData" border>
-				<el-table-column prop="UserName" label="用户名"></el-table-column>
-				<el-table-column prop="DisplayName" label="真实姓名"></el-table-column>
+			<el-table :data="tableData" border >
+				<el-table-column prop="UserName" align="center" label="用户名"></el-table-column>
+				<el-table-column prop="DisplayName" align="center" label="真实姓名"></el-table-column>
 				<el-table-column label="性别">
 					<template slot-scope="scope">
 						{{scope.row.UserGender ? '男' : '女'}}
 					</template>
 				</el-table-column>
-				<el-table-column prop="UserTel" label="联系电话"></el-table-column>
-				<el-table-column prop="UserStatus" label="状态"></el-table-column>
-				<el-table-column prop="UserType" label="用户类型"></el-table-column>
-				<el-table-column prop="" label="负责经销商"></el-table-column>
-				<el-table-column prop="UserName" label="角色设置">
+				<el-table-column prop="UserTel" align="center" label="联系电话"></el-table-column>
+				<el-table-column prop="UserStatus" align="center" label="状态"></el-table-column>
+				<el-table-column prop="UserType" align="center" label="用户类型"></el-table-column>
+				<el-table-column prop="" align="center" label="负责经销商"></el-table-column>
+				<el-table-column prop="UserName" align="center" label="角色设置">
 					<template slot-scope="scope">
 						<el-button type="text" @click="GetRole(scope.row)" size="small">设置</el-button>
 					</template>
 				</el-table-column>
-				<el-table-column prop="UserName" label="操作">
+				<el-table-column prop="UserName" align="center" label="操作">
 					<template slot-scope="scope">
 						<el-button type="text" @click="UpdataUser(scope)" size="small">编辑</el-button>
 						<el-button type="text" @click="DisableUser(scope)" size="small">禁用</el-button>
@@ -86,16 +86,16 @@
 			</el-table>
 		</div>
 		<el-dialog title="设置角色" :visible.sync="dialogVisible" width="30%">
-      		<el-table ref="multipleTable" highlight-current-row
+      		<el-table ref="multipleTable" highlight-current-row align="center"
     @current-change="handleCurrentChange" @select="selectChange" @selection-change="handleSelectionChange" :data="roles" border>
 				<!-- <el-table-column>
 					<template slot-scope="scope">
 						<el-checkbox @change="checkboxChange(scope.row)" v-model="scope.row.checked"></el-checkbox>
 					</template>
 				</el-table-column> -->
-				<el-table-column type="selection" width="55"></el-table-column>
-				<el-table-column prop="RoleName" label="角色"></el-table-column>
-				<el-table-column prop="Remark" label="角色描述"></el-table-column>
+				<el-table-column type="selection" align="center" width="55"></el-table-column>
+				<el-table-column prop="RoleName" align="center" label="角色"></el-table-column>
+				<el-table-column prop="Remark" align="center" label="角色描述"></el-table-column>
 			</el-table>
       		<span slot="footer" class="dialog-footer">
         		<el-button @click="dialogVisible = false">取 消</el-button>
@@ -346,9 +346,6 @@ h3{
 .el-form-item {
     margin-bottom: 20px;
 }
-.cell{
-	text-align: center;
-}
 .el-form-item {
     width: 300px;
     display: inline-block;
@@ -357,9 +354,7 @@ h3{
 	text-align: center;
 	line-height: 40px;
 }
-.el-table th.gutter{    
-    display: table-cell !important;
-}
+
 .el-dialog__body {
     padding: 0px 20px;
 }

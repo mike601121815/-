@@ -121,16 +121,19 @@ export default {
       //判断是否选中角色
       if(this.selectIndex!=-1){
         let data = this.$refs['tree'].getCheckedNodes()
+        console.log(data);
         data = data.filter(item=>{
           if(!item.Child){
-            return item.Id
+            return item.ModuleId
           }
         })
+        
         data = data.map(item=>{
           if(!item.Child){
-            return item.Id
+            return item.ModuleId
           }
         })
+        console.log(data);
         //发送权限列表
         this.$axios({
         method: 'post',
